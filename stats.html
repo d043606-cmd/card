@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>心願小卡 推廣成效儀表板｜臺北榮民總醫院蘇澳暨員山分院</title>
+<meta name="theme-color" content="#2E6B62">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+:root{--sage:#2E6B62;--sage2:#3D8A7E;--sage3:#E8F4F1;--rose:#C8526A;--rose2:#A8394F;--roseL:#FCE8ED;--gold:#B8860B;--goldL:#FDF8E0;--ink:#1E2830;--mist:#5F7A74;--white:#FFFFFF;--bg:#F4FAF8}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{min-height:100vh;background:var(--bg);font-family:'Noto Sans TC',sans-serif;color:var(--ink)}
+/* header */
+.header{background:linear-gradient(135deg,#1A4840,var(--sage));padding:28px 24px 24px;color:#fff}
+.header-inner{max-width:900px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:12px}
+.header h1{font-family:'Noto Serif TC',serif;font-size:24px;font-weight:900;margin-bottom:4px}
+.header p{font-size:13px;opacity:.75}
+.header-right{text-align:right}
+.live-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:100px;padding:4px 12px;font-size:12px;color:#fff;margin-bottom:6px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.last-update{font-size:11px;opacity:.6}
+/* layout */
+.main{max-width:900px;margin:0 auto;padding:24px 16px 60px}
+/* stat cards */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px}
+@media(min-width:600px){.stats-grid{grid-template-columns:repeat(4,1fr)}}
+.stat-card{background:var(--white);border-radius:16px;padding:20px 16px;text-align:center;box-shadow:0 2px 12px rgba(46,107,98,.08)}
+.stat-num{font-size:36px;font-weight:700;font-family:'Noto Serif TC',serif;line-height:1;margin-bottom:4px}
+.stat-lbl{font-size:12px;color:var(--mist);line-height:1.4}
+.stat-sub{font-size:11px;margin-top:4px;font-weight:500}
+/* sections */
+.section{background:var(--white);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 2px 12px rgba(46,107,98,.06)}
+.sec-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+.sec-title{font-size:15px;font-weight:700;color:var(--sage)}
+.sec-badge{font-size:11px;padding:3px 10px;border-radius:100px;background:var(--sage3);color:var(--sage);font-weight:500}
+/* bar chart */
+.bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.bar-row:last-child{margin-bottom:0}
+.bar-label{font-size:12px;color:var(--mist);width:80px;flex-shrink:0;text-align:right}
+.bar-track{flex:1;height:12px;background:var(--bg);border-radius:6px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .8s cubic-bezier(.34,1.56,.64,1)}
+.bar-count{font-size:12px;font-weight:500;color:var(--ink);min-width:32px}
+.bar-pct{font-size:11px;color:var(--mist)}
+/* donut */
+.donut-wrap{display:flex;gap:20px;align-items:center;flex-wrap:wrap}
+.donut-center{position:relative;flex-shrink:0}
+.legend-list{flex:1;min-width:140px}
+.legend-item{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:13px}
+.legend-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+.legend-name{flex:1;color:var(--ink)}
+.legend-pct{font-weight:500;color:var(--ink)}
+.legend-cnt{font-size:11px;color:var(--mist);margin-left:4px}
+/* heatmap */
+.heatmap{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:4px}
+.hm-cell{aspect-ratio:1;border-radius:3px;transition:background .3s;cursor:default}
+.hm-cell:hover{opacity:.8}
+.hm-legend{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+.hm-scale{display:flex;gap:3px;align-items:center}
+.hm-sq{width:10px;height:10px;border-radius:2px}
+/* insight cards */
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.insight-card{background:var(--sage3);border-radius:12px;padding:14px 16px}
+.insight-num{font-size:22px;font-weight:700;color:var(--sage);margin-bottom:2px}
+.insight-lbl{font-size:12px;color:var(--mist)}
+.insight-card.rose{background:var(--roseL)}
+.insight-card.rose .insight-num{color:var(--rose2)}
+.insight-card.gold{background:var(--goldL)}
+.insight-card.gold .insight-num{color:var(--gold)}
+/* empty state */
+.empty{text-align:center;padding:32px 16px;color:var(--mist)}
+.empty-icon{font-size:40px;margin-bottom:12px;opacity:.5}
+/* action */
+.action-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:20px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:'Noto Sans TC',sans-serif;transition:all .2s;text-decoration:none}
+.btn-primary{background:linear-gradient(135deg,var(--sage),#1A4840);color:#fff;box-shadow:0 4px 14px rgba(46,107,98,.3)}
+.btn-primary:hover{transform:translateY(-2px)}
+.btn-secondary{background:var(--sage3);color:var(--sage);border:1px solid var(--sage2)}
+.btn-secondary:hover{background:#d0ece8}
+/* spinner */
+.loading{text-align:center;padding:48px;color:var(--mist)}
+.spin{display:inline-block;font-size:32px;animation:spin 1.2s linear infinite;margin-bottom:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
+footer{text-align:center;padding:24px;font-size:11px;color:var(--mist);line-height:2}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>🌸 心願小卡推廣成效儀表板</h1>
+      <p>臺北榮民總醫院蘇澳暨員山分院　護理部安寧宣導推動小組</p>
+    </div>
+    <div class="header-right">
+      <div class="live-badge"><span class="live-dot"></span>即時數據</div>
+      <div class="last-update" id="lastUpdate">載入中…</div>
+    </div>
+  </div>
+</div>
+
+<div class="main">
+  <div id="loadingView" class="loading">
+    <div class="spin">✦</div>
+    <div>正在讀取推廣數據…</div>
+  </div>
+
+  <div id="mainContent" style="display:none">
+    <!-- 核心數字 -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--sage)" id="sTotal">0</div>
+        <div class="stat-lbl">心願小卡<br>總製作數</div>
+        <div class="stat-sub" style="color:var(--sage)">累計參與人次</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--rose2)" id="sAudioRate">0%</div>
+        <div class="stat-lbl">語音錄製<br>參與率</div>
+        <div class="stat-sub" style="color:var(--rose2)">深度參與指標</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--gold)" id="sAvgMsg">0</div>
+        <div class="stat-lbl">平均心願<br>文字長度</div>
+        <div class="stat-sub" style="color:var(--gold)">字　投入程度指標</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" style="color:var(--sage2)" id="sActiveDays">0</div>
+        <div class="stat-lbl">累計<br>活躍天數</div>
+        <div class="stat-sub" style="color:var(--sage2)">持續推廣天數</div>
+      </div>
+    </div>
+
+    <!-- 今日 & 本週 -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-title">📅 近期活躍狀況</div>
+      </div>
+      <div class="insight-grid">
+        <div class="insight-card">
+          <div class="insight-num" id="iToday">0</div>
+          <div class="insight-lbl">今日製作數</div>
+        </div>
+        <div class="insight-card rose">
+          <div class="insight-num" id="iWeek">0</div>
+          <div class="insight-lbl">本週製作數</div>
+        </div>
+        <div class="insight-card gold">
+          <div class="insight-num" id="iMonth">0</div>
+          <div class="insight-lbl">本月製作數</div>
+        </div>
+        <div class="insight-card" style="background:#EEF0FF">
+          <div class="insight-num" style="color:#4A5AB8" id="iPeak">—</div>
+          <div class="insight-lbl">單日最高峰值</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 製作方式 -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-title">🎙 製作方式分析</div>
+        <span class="sec-badge" id="totalBadge">共 0 張</span>
+      </div>
+      <div class="donut-wrap">
+        <div class="donut-center">
+          <canvas id="donutChart" width="140" height="140"></canvas>
+        </div>
+        <div class="legend-list" id="modeLegend"></div>
+      </div>
+    </div>
+
+    <!-- 智慧配色主題分布 -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-title">✦ 智慧配色主題分布</div>
+        <span class="sec-badge">情感分析指標</span>
+      </div>
+      <div id="themeBars"></div>
+      <p style="font-size:11px;color:var(--mist);margin-top:12px;line-height:1.7">
+        ▸ 主題分布反映使用者的情感狀態，是質性數據的重要指標，可作為 ACP 推廣成效佐證。
+      </p>
+    </div>
+
+    <!-- 30天趨勢 -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-title">📈 每日使用趨勢（近30天）</div>
+      </div>
+      <canvas id="trendChart" height="80"></canvas>
+    </div>
+
+    <!-- 熱力圖 -->
+    <div class="section">
+      <div class="sec-header">
+        <div class="sec-title">🗓 使用熱力圖（近30天）</div>
+      </div>
+      <div class="heatmap" id="heatmap"></div>
+      <div class="hm-legend">
+        <span style="font-size:11px;color:var(--mist)">較少</span>
+        <div class="hm-scale">
+          <div class="hm-sq" style="background:#E8F4F1"></div>
+          <div class="hm-sq" style="background:#9FE1CB"></div>
+          <div class="hm-sq" style="background:#2E8060"></div>
+          <div class="hm-sq" style="background:#1A4840"></div>
+        </div>
+        <span style="font-size:11px;color:var(--mist)">較多</span>
+      </div>
+    </div>
+
+    <!-- 操作按鈕 -->
+    <div class="action-row">
+      <button class="btn btn-primary" onclick="exportReport()">📊 匯出成效報告</button>
+      <a class="btn btn-secondary" href="./index.html">🌸 前往製作心願小卡</a>
+      <button class="btn btn-secondary" onclick="loadData()">↻ 重新整理</button>
+    </div>
+  </div>
+
+  <div id="emptyView" style="display:none" class="empty">
+    <div class="empty-icon">🌱</div>
+    <div style="font-size:15px;font-weight:500;margin-bottom:8px">尚無數據</div>
+    <div style="font-size:13px;line-height:1.7">還沒有人製作心願小卡，<br>或 stats.json 尚未建立。<br>製作第一張心願卡後數據將自動記錄。</div>
+    <div style="margin-top:16px"><a class="btn btn-primary" href="./index.html">🌸 前往製作心願小卡</a></div>
+  </div>
+</div>
+
+<footer>
+  🕊 臺北榮民總醫院蘇澳暨員山分院　護理部　安寧宣導推動小組<br>
+  善終是每個人的權利　✦ 智慧配色設計<br>
+  <span style="opacity:.5">數據來源：GitHub Repository　統計不含任何個人資料</span>
+</footer>
+
+<script>
+var OWNER='d043606-cmd', REPO='card', BRANCH='main';
+var THEMES={
+  grateful:{name:'感恩暖金',color:'#B8860B',bg:'#FDF8E0'},
+  love:{name:'深情玫瑰',color:'#C8526A',bg:'#FCE8ED'},
+  hope:{name:'希望清綠',color:'#2E8060',bg:'#E8F4F1'},
+  sorry:{name:'溫柔藍紫',color:'#4A5A9A',bg:'#EEEEFF'},
+  parent:{name:'穩重深青',color:'#2E6B70',bg:'#E0F4F4'},
+  spouse:{name:'浪漫玫紫',color:'#8A4090',bg:'#F4E0F8'},
+  child:{name:'活力暖橙',color:'#C05020',bg:'#FFE8D8'},
+  default:{name:'心願粉紅',color:'#C8526A',bg:'#FCE8ED'}
+};
+
+var donutChartObj=null, trendChartObj=null;
+
+async function loadData(){
+  document.getElementById('loadingView').style.display='block';
+  document.getElementById('mainContent').style.display='none';
+  document.getElementById('emptyView').style.display='none';
+
+  try {
+    var statsUrl='https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/stats.json';
+    var r=await fetch(statsUrl,{headers:{'Accept':'application/vnd.github.v3+json'}});
+    if(!r.ok) throw new Error('no stats');
+    var data=await r.json();
+    var stats=JSON.parse(atob(data.content.replace(/\n/g,'')));
+
+    if(!stats.total||stats.total===0) throw new Error('empty');
+
+    renderDashboard(stats);
+    document.getElementById('loadingView').style.display='none';
+    document.getElementById('mainContent').style.display='block';
+    document.getElementById('lastUpdate').textContent='更新：'+new Date().toLocaleString('zh-TW',{hour12:false});
+
+  } catch(e){
+    document.getElementById('loadingView').style.display='none';
+    if(e.message==='empty'||e.message==='no stats'){
+      document.getElementById('emptyView').style.display='block';
+    } else {
+      // show demo data
+      renderDashboard(getDemoData());
+      document.getElementById('mainContent').style.display='block';
+      document.getElementById('lastUpdate').textContent='示範數據（連線後顯示真實統計）';
+    }
+  }
+}
+
+function getDemoData(){
+  var byDate={};
+  var now=new Date();
+  for(var i=29;i>=0;i--){
+    var d=new Date(now); d.setDate(d.getDate()-i);
+    var k=d.toISOString().slice(0,10);
+    byDate[k]=Math.floor(Math.random()*8);
+  }
+  byDate[now.toISOString().slice(0,10)]=5;
+  return {
+    total:42, audio:31, textOnly:11, avgMsgLen:68,
+    themes:{love:14,grateful:10,hope:8,parent:5,child:3,spouse:1,sorry:1,default:0},
+    byDate:byDate, lastUpdated:new Date().toISOString()
+  };
+}
+
+function renderDashboard(s){
+  var total=s.total||0;
+  var audio=s.audio||0;
+  var textOnly=s.textOnly||0;
+  var audioRate=total>0?Math.round(audio/total*100):0;
+
+  // core stats
+  document.getElementById('sTotal').textContent=total;
+  document.getElementById('sAudioRate').textContent=audioRate+'%';
+  document.getElementById('sAvgMsg').textContent=s.avgMsgLen||0;
+  document.getElementById('totalBadge').textContent='共 '+total+' 張';
+
+  var byDate=s.byDate||{};
+  var activeDays=Object.keys(byDate).filter(function(k){return byDate[k]>0;}).length;
+  document.getElementById('sActiveDays').textContent=activeDays;
+
+  // today / week / month
+  var now=new Date();
+  var today=now.toISOString().slice(0,10);
+  var todayCount=byDate[today]||0;
+  var weekStart=new Date(now); weekStart.setDate(now.getDate()-now.getDay());
+  var weekStr=weekStart.toISOString().slice(0,10);
+  var monthStr=now.toISOString().slice(0,7);
+  var weekCount=0, monthCount=0, peakVal=0, peakDate='—';
+  Object.keys(byDate).forEach(function(d){
+    var v=byDate[d]||0;
+    if(d>=weekStr) weekCount+=v;
+    if(d.startsWith(monthStr)) monthCount+=v;
+    if(v>peakVal){peakVal=v;peakDate=d;}
+  });
+  document.getElementById('iToday').textContent=todayCount;
+  document.getElementById('iWeek').textContent=weekCount;
+  document.getElementById('iMonth').textContent=monthCount;
+  document.getElementById('iPeak').textContent=peakVal>0?peakVal+'張\n'+peakDate:'—';
+
+  // donut
+  renderDonut(audio, textOnly, total);
+
+  // theme bars
+  renderThemeBars(s.themes||{}, total);
+
+  // trend chart
+  renderTrend(byDate);
+
+  // heatmap
+  renderHeatmap(byDate);
+}
+
+function renderDonut(audio, textOnly, total){
+  var canvas=document.getElementById('donutChart');
+  var ctx=canvas.getContext('2d');
+  if(donutChartObj) donutChartObj.destroy();
+  donutChartObj=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:['語音錄製','純文字'],
+      datasets:[{
+        data:[audio, textOnly],
+        backgroundColor:['#2E8060','#FCE8ED'],
+        borderColor:['#2E8060','#C8526A'],
+        borderWidth:1.5,
+        hoverOffset:4
+      }]
+    },
+    options:{
+      cutout:'60%',
+      plugins:{
+        legend:{display:false},
+        tooltip:{callbacks:{label:function(c){var v=c.raw;var p=total>0?Math.round(v/total*100):0;return c.label+': '+v+'張 ('+p+'%)';}}}
+      },
+      animation:{animateRotate:true,duration:800}
+    }
+  });
+  var legend=document.getElementById('modeLegend');
+  var items=[
+    {label:'語音錄製',val:audio,color:'#2E8060',border:'#2E8060'},
+    {label:'純文字',val:textOnly,color:'#FCE8ED',border:'#C8526A'},
+  ];
+  legend.innerHTML=items.map(function(it){
+    var p=total>0?Math.round(it.val/total*100):0;
+    return '<div class="legend-item">'
+      +'<div class="legend-dot" style="background:'+it.color+';border:1.5px solid '+it.border+'"></div>'
+      +'<span class="legend-name">'+it.label+'</span>'
+      +'<span class="legend-pct">'+p+'%</span>'
+      +'<span class="legend-cnt">('+it.val+'張)</span>'
+      +'</div>';
+  }).join('');
+}
+
+function renderThemeBars(themes, total){
+  var container=document.getElementById('themeBars');
+  var sorted=Object.keys(THEMES).map(function(k){
+    return {key:k,val:themes[k]||0,theme:THEMES[k]};
+  }).filter(function(x){return x.val>0;}).sort(function(a,b){return b.val-a.val;});
+
+  if(sorted.length===0){
+    container.innerHTML='<div style="text-align:center;color:var(--mist);padding:16px;font-size:13px">尚無主題數據</div>';
+    return;
+  }
+  var max=sorted[0].val;
+  container.innerHTML=sorted.map(function(item){
+    var pct=max>0?Math.round(item.val/max*100):0;
+    var totalPct=total>0?Math.round(item.val/total*100):0;
+    return '<div class="bar-row">'
+      +'<div class="bar-label" style="font-size:11px">'+item.theme.name+'</div>'
+      +'<div class="bar-track"><div class="bar-fill" style="width:'+pct+'%;background:'+item.theme.color+'"></div></div>'
+      +'<div class="bar-count">'+item.val+'</div>'
+      +'<div class="bar-pct">'+totalPct+'%</div>'
+      +'</div>';
+  }).join('');
+}
+
+function renderTrend(byDate){
+  var days=[], counts=[];
+  var now=new Date();
+  for(var i=29;i>=0;i--){
+    var d=new Date(now); d.setDate(d.getDate()-i);
+    var k=d.toISOString().slice(0,10);
+    days.push((d.getMonth()+1)+'/'+(d.getDate()));
+    counts.push(byDate[k]||0);
+  }
+  var canvas=document.getElementById('trendChart');
+  var ctx=canvas.getContext('2d');
+  if(trendChartObj) trendChartObj.destroy();
+  trendChartObj=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels:days,
+      datasets:[{
+        label:'製作數',
+        data:counts,
+        borderColor:'#2E6B62',
+        backgroundColor:'rgba(46,107,98,.08)',
+        borderWidth:2,
+        pointRadius:3,
+        pointBackgroundColor:'#2E6B62',
+        fill:true,
+        tension:0.4
+      }]
+    },
+    options:{
+      responsive:true,
+      plugins:{legend:{display:false},tooltip:{callbacks:{title:function(c){return days[c[0].dataIndex];},label:function(c){return '製作 '+c.raw+' 張';}}}},
+      scales:{
+        x:{grid:{display:false},ticks:{maxTicksLimit:8,font:{size:11},color:'#5F7A74'}},
+        y:{beginAtZero:true,ticks:{stepSize:1,font:{size:11},color:'#5F7A74'},grid:{color:'rgba(46,107,98,.08)'}}
+      },
+      animation:{duration:600}
+    }
+  });
+}
+
+function renderHeatmap(byDate){
+  var container=document.getElementById('heatmap');
+  var now=new Date();
+  var days=[];
+  for(var i=29;i>=0;i--){
+    var d=new Date(now); d.setDate(d.getDate()-i);
+    days.push(d.toISOString().slice(0,10));
+  }
+  var max=Math.max.apply(null,days.map(function(d){return byDate[d]||0;}));
+  var colors=['#E8F4F1','#9FE1CB','#2E8060','#1A4840'];
+  container.innerHTML=days.map(function(d){
+    var v=byDate[d]||0;
+    var ratio=max>0?v/max:0;
+    var ci=v===0?0:ratio<0.33?1:ratio<0.66?2:3;
+    var isToday=d===now.toISOString().slice(0,10);
+    return '<div class="hm-cell" title="'+d.slice(5)+': '+v+'張" style="background:'+colors[ci]+';'
+      +(isToday?'outline:2px solid #2E6B62;outline-offset:1px':'')+'"></div>';
+  }).join('');
+}
+
+function exportReport(){
+  var now=new Date();
+  var dateStr=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日';
+  var totalEl=document.getElementById('sTotal').textContent;
+  var rateEl=document.getElementById('sAudioRate').textContent;
+  var avgEl=document.getElementById('sAvgMsg').textContent;
+  var daysEl=document.getElementById('sActiveDays').textContent;
+  var todayEl=document.getElementById('iToday').textContent;
+  var weekEl=document.getElementById('iWeek').textContent;
+  var monthEl=document.getElementById('iMonth').textContent;
+
+  var report='心願小卡推廣成效報告\n'
+    +'臺北榮民總醫院蘇澳暨員山分院　護理部安寧宣導推動小組\n'
+    +'報告日期：'+dateStr+'\n\n'
+    +'═══════════════════════════\n'
+    +'核心成效數據\n'
+    +'═══════════════════════════\n'
+    +'心願小卡總製作數：'+totalEl+' 張\n'
+    +'語音錄製參與率：'+rateEl+'\n'
+    +'平均心願文字長度：'+avgEl+' 字\n'
+    +'累計活躍天數：'+daysEl+' 天\n\n'
+    +'═══════════════════════════\n'
+    +'近期活躍狀況\n'
+    +'═══════════════════════════\n'
+    +'今日製作數：'+todayEl+' 張\n'
+    +'本週製作數：'+weekEl+' 張\n'
+    +'本月製作數：'+monthEl+' 張\n\n'
+    +'═══════════════════════════\n'
+    +'說明\n'
+    +'═══════════════════════════\n'
+    +'本工具為全免費數位心願小卡系統，\n'
+    +'結合智慧配色 AI 技術，自動生成專屬設計。\n'
+    +'與健保署 ACP 給付推廣結合，作為情感入口工具。\n\n'
+    +'數據來源：GitHub Repository cards/\n'
+    +'統計不含任何個人資料\n';
+
+  var blob=new Blob([report],{type:'text/plain;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;
+  a.download='心願小卡成效報告_'+now.toISOString().slice(0,10)+'.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+loadData();
+</script>
+</body>
+</html>
