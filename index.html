@@ -87,6 +87,18 @@ audio#playAud{width:100%;margin-top:10px;display:none}
 .token-input-row{display:flex;gap:8px;align-items:center}
 .token-input{flex:1;background:#fff;border:1.5px solid #f0c070;border-radius:10px;padding:10px 13px;font-size:13px;font-family:monospace;color:var(--ink);outline:none}
 .token-input:focus{border-color:#c8a040;box-shadow:0 0 0 3px rgba(200,160,60,.12)}
+
+.toggle-wrap{width:44px;height:24px;background:var(--rose-l);border-radius:100px;position:relative;cursor:pointer;transition:background .3s;border:1.5px solid var(--rose-l)}
+.toggle-wrap.on{background:var(--rose)}
+.toggle-knob{width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:1px;left:1px;transition:transform .3s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.toggle-wrap.on .toggle-knob{transform:translateX(20px)}
+.theme-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.theme-btn{border:2px solid var(--rose-l);border-radius:12px;padding:10px 12px;cursor:pointer;background:var(--petal);transition:all .2s;text-align:left}
+.theme-btn:hover{transform:translateY(-1px)}
+.theme-btn.picked{border-width:2px}
+.theme-btn-name{font-size:13px;font-weight:700;margin-bottom:2px}
+.theme-btn-desc{font-size:11px;opacity:.75;line-height:1.4}
+
 /* uploading */
 .uploading-box{text-align:center;padding:32px 20px}
 .spin{font-size:48px;display:block;margin-bottom:16px;animation:spin 1.5s linear infinite}
@@ -179,6 +191,29 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
           <div class="mcard-title">略過錄音，純文字</div>
           <div class="mcard-desc">對方點連結，看到專屬心願卡文字內容</div>
         </div>
+      </div>
+    </div>
+
+    <!-- Theme selector -->
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--rose-d)">✦ 智慧配色設計</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-size:12px;color:var(--mist)" id="modeLabel">自動</span>
+          <div class="toggle-wrap" id="themeToggle" onclick="toggleThemeMode()">
+            <div class="toggle-knob" id="toggleKnob"></div>
+          </div>
+          <span style="font-size:12px;color:var(--mist)" id="modeLabel2">手動</span>
+        </div>
+      </div>
+      <!-- auto hint -->
+      <div id="autoHint" style="font-size:12px;color:var(--mist);background:var(--petal);border-radius:10px;padding:8px 12px;line-height:1.6">
+        🤖 系統根據你填寫的內容，自動選擇最適合的配色
+      </div>
+      <!-- manual picker -->
+      <div id="manualPicker" style="display:none">
+        <div style="font-size:12px;color:var(--mist);margin-bottom:8px">選擇你喜歡的配色主題：</div>
+        <div class="theme-grid" id="themeGrid"></div>
       </div>
     </div>
     <div class="brow">
@@ -564,7 +599,7 @@ async function uploadAndGenerate(){
   var fromVal=document.getElementById('from').value.trim()||'送卡人';
   var toVal=document.getElementById('to').value.trim()||'親愛的你';
   var msgVal=document.getElementById('msg').value.trim();
-  var theme=THEMES[currentThemeKey];
+  var theme=THEMES[themeMode==='manual'?manualThemeKey:currentThemeKey];
   go(4);
   try {
     cardId=randId();
@@ -683,10 +718,70 @@ function again(){
   document.getElementById('msg').value='';
   document.getElementById('cc').textContent='0';
   document.getElementById('aiPreview').style.display='none';
+  themeMode='auto';
+  manualThemeKey='default';
+  var tog=document.getElementById('themeToggle');
+  if(tog) tog.classList.remove('on');
+  var ah=document.getElementById('autoHint'); if(ah) ah.style.display='block';
+  var mp=document.getElementById('manualPicker'); if(mp) mp.style.display='none';
   document.getElementById('mA').classList.remove('picked');
   document.getElementById('mS').classList.remove('picked');
   document.getElementById('mNext').disabled=true;
   redo(); go(1);
+}
+
+
+// ── THEME MODE TOGGLE ──
+var themeMode='auto'; // 'auto' or 'manual'
+var manualThemeKey='default';
+
+function toggleThemeMode(){
+  themeMode = themeMode==='auto'?'manual':'auto';
+  var tog=document.getElementById('themeToggle');
+  tog.classList.toggle('on', themeMode==='manual');
+  document.getElementById('autoHint').style.display=themeMode==='auto'?'block':'none';
+  document.getElementById('manualPicker').style.display=themeMode==='manual'?'block':'none';
+  if(themeMode==='manual' && !document.getElementById('themeGrid').children.length) buildThemeGrid();
+}
+
+function buildThemeGrid(){
+  var grid=document.getElementById('themeGrid');
+  grid.innerHTML='';
+  var keys=['grateful','love','hope','sorry','parent','spouse','child','default'];
+  keys.forEach(function(key){
+    var t=THEMES[key];
+    var btn=document.createElement('div');
+    btn.className='theme-btn';
+    btn.id='tbtn_'+key;
+    btn.style.background=t.bodyBg;
+    btn.style.borderColor=t.footerBorder;
+    btn.innerHTML='<div class="theme-btn-name" style="color:'+t.h1+'">'+t.deco+' '+t.name+'</div>'
+      +'<div class="theme-btn-desc" style="color:'+t.h2+'">'+t.desc.replace('偵測到','').split('，')[0]+'</div>';
+    btn.onclick=function(){ selectManualTheme(key); };
+    if(key===manualThemeKey) btn.style.borderWidth='2px';
+    grid.appendChild(btn);
+  });
+}
+
+function selectManualTheme(key){
+  manualThemeKey=key;
+  currentThemeKey=key;
+  var t=THEMES[key];
+  document.querySelectorAll('.theme-btn').forEach(function(b){ b.style.borderWidth='1.5px'; b.style.boxShadow='none'; });
+  var sel=document.getElementById('tbtn_'+key);
+  if(sel){ sel.style.borderWidth='2.5px'; sel.style.boxShadow='0 0 0 3px '+t.footerBorder+'55'; }
+  showToast('✦ 已選擇「'+t.name+'」');
+  // update preview in step 1
+  var el=document.getElementById('aiPreview');
+  el.style.display='block';
+  el.style.background=t.bodyBg;
+  el.style.border='1.5px solid '+t.footerBorder;
+  document.getElementById('aiLabel').style.color=t.h2;
+  document.getElementById('aiLabel').textContent='✦ 手動選擇：'+t.name;
+  document.getElementById('aiName').style.color=t.h1;
+  document.getElementById('aiName').textContent=t.deco+' '+t.name;
+  document.getElementById('aiDesc').style.color=t.h2;
+  document.getElementById('aiDesc').textContent='已手動套用此配色主題';
 }
 
 function showToast(m){
