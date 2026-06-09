@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🌸 心願小卡 — 給你最深的話｜臺北榮民總醫院蘇澳暨員山分院</title>
-<meta name="description" content="錄下你的聲音，送出一張永遠保存的心願小卡。臺北榮民總醫院蘇澳暨員山分院">
+<meta name="description" content="智慧感知心願內容，自動生成專屬心願小卡。臺北榮民總醫院蘇澳暨員山分院">
 <meta name="theme-color" content="#c8526a">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -15,11 +15,13 @@ body{min-height:100vh;background:linear-gradient(160deg,#fce8ed,#f5d0d8 25%,#fdf
 .petal{position:absolute;opacity:.15;animation:fall linear infinite;font-size:18px}
 @keyframes fall{0%{transform:translateY(-40px) rotate(0);opacity:0}10%{opacity:.15}90%{opacity:.08}100%{transform:translateY(105vh) rotate(300deg);opacity:0}}
 .wrap{position:relative;z-index:1;max-width:540px;margin:0 auto;padding:28px 18px 72px}
-.logo{text-align:center;margin-bottom:28px}
+.logo{text-align:center;margin-bottom:20px}
 .logo-icon{font-size:44px;display:block;margin-bottom:10px;animation:bob 4s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 .logo h1{font-family:'Noto Serif TC',serif;font-size:24px;font-weight:900;color:var(--rose-d);margin-bottom:4px}
 .logo p{font-size:13px;color:var(--mist);line-height:1.7}
+/* AI badge */
+.ai-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,#6a3de8,#a06af8);color:#fff;font-size:11px;font-weight:700;padding:4px 14px;border-radius:100px;margin-bottom:20px;letter-spacing:.5px}
 .prog-row{display:flex;align-items:center;justify-content:center;margin-bottom:28px}
 .prog-step{display:flex;flex-direction:column;align-items:center;gap:4px}
 .prog-dot{width:32px;height:32px;border-radius:50%;background:var(--rose-l);color:var(--mist);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .3s;border:2px solid transparent}
@@ -39,16 +41,11 @@ body{min-height:100vh;background:linear-gradient(160deg,#fce8ed,#f5d0d8 25%,#fdf
 .fg input:focus,.fg textarea:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(200,82,106,.1)}
 .fg textarea{min-height:110px;line-height:1.85}
 .cc{text-align:right;font-size:11px;color:var(--mist);margin-top:3px}
-/* token panel */
-.token-box{background:#fff8f0;border:1.5px solid #f5d0a0;border-radius:16px;padding:20px;margin-bottom:14px}
-.token-box h4{font-size:14px;font-weight:700;color:#8a5a10;margin-bottom:6px}
-.token-box p{font-size:12px;color:#8a6f50;line-height:1.7;margin-bottom:12px}
-.token-input-row{display:flex;gap:8px;align-items:center}
-.token-input{flex:1;background:#fff;border:1.5px solid #f0c070;border-radius:10px;padding:10px 13px;font-size:13px;font-family:monospace;color:var(--ink);outline:none}
-.token-input:focus{border-color:#c8a040;box-shadow:0 0 0 3px rgba(200,160,60,.12)}
-.token-saved{background:#f0faf5;border:1.5px solid #a0d8b8;border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
-.token-saved-txt{font-size:13px;color:#2e8060}
-.token-clear{font-size:12px;color:var(--mist);cursor:pointer;text-decoration:underline}
+/* AI preview badge */
+.ai-preview{border-radius:14px;padding:12px 16px;margin-top:12px;display:none;transition:all .4s}
+.ai-preview-label{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px;opacity:.8}
+.ai-preview-name{font-size:14px;font-weight:700}
+.ai-preview-desc{font-size:12px;opacity:.75;margin-top:2px}
 /* modes */
 .modes{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
 .mcard{border:2px solid var(--rose-l);border-radius:16px;padding:18px 20px;cursor:pointer;background:var(--petal);transition:all .2s;display:flex;align-items:center;gap:16px}
@@ -83,6 +80,13 @@ audio#playAud{width:100%;margin-top:10px;display:none}
 .amber{background:linear-gradient(135deg,#c8a040,#a07820);color:#fff}
 .full{width:100%;justify-content:center;margin-bottom:10px}
 .brow{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:20px}
+/* token */
+.token-box{background:#fff8f0;border:1.5px solid #f5d0a0;border-radius:16px;padding:20px;margin-bottom:14px}
+.token-box h4{font-size:14px;font-weight:700;color:#8a5a10;margin-bottom:6px}
+.token-box p{font-size:12px;color:#8a6f50;line-height:1.7;margin-bottom:12px}
+.token-input-row{display:flex;gap:8px;align-items:center}
+.token-input{flex:1;background:#fff;border:1.5px solid #f0c070;border-radius:10px;padding:10px 13px;font-size:13px;font-family:monospace;color:var(--ink);outline:none}
+.token-input:focus{border-color:#c8a040;box-shadow:0 0 0 3px rgba(200,160,60,.12)}
 /* uploading */
 .uploading-box{text-align:center;padding:32px 20px}
 .spin{font-size:48px;display:block;margin-bottom:16px;animation:spin 1.5s linear infinite}
@@ -119,7 +123,10 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
   <div class="logo">
     <span class="logo-icon">🌸</span>
     <h1>給你最深的話</h1>
-    <p>把心意寫下來，錄下你的聲音，傳給最重要的人</p>
+    <p>智慧感知心願內容，自動生成專屬心願小卡</p>
+  </div>
+  <div style="text-align:center;margin-bottom:20px">
+    <span class="ai-badge">✦ 智慧配色設計</span>
   </div>
 
   <div class="prog-row">
@@ -135,15 +142,21 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
   <!-- STEP 1 -->
   <div class="panel on" id="p1">
     <div class="ptitle">🌸 寫下你的心願</div>
-    <div class="psub">先填好姓名和想說的話。</div>
+    <div class="psub">填寫完後，智慧系統會自動分析內容，生成專屬設計。</div>
     <div class="row2">
-      <div class="fg"><label>你的名字</label><input id="from" placeholder="例：阿嬤、媽媽"></div>
+      <div class="fg"><label>你的名字</label><input id="from" placeholder="例：阿嬤、媽媽" oninput="previewTheme()"></div>
       <div class="fg"><label>對方的名字</label><input id="to" placeholder="例：小華、孩子"></div>
     </div>
     <div class="fg">
       <label>想說的話（最多150字）</label>
-      <textarea id="msg" maxlength="150" placeholder="謝謝你陪在我身邊…&#10;我愛你，不管發生什麼事…&#10;希望你以後能平安快樂…"></textarea>
+      <textarea id="msg" maxlength="150" oninput="onMsgInput()" placeholder="謝謝你陪在我身邊…&#10;我愛你，不管發生什麼事…&#10;希望你以後能平安快樂…"></textarea>
       <div class="cc"><span id="cc">0</span> / 150</div>
+    </div>
+    <!-- AI theme preview -->
+    <div class="ai-preview" id="aiPreview">
+      <div class="ai-preview-label" id="aiLabel">✦ 智慧配色</div>
+      <div class="ai-preview-name" id="aiName"></div>
+      <div class="ai-preview-desc" id="aiDesc"></div>
     </div>
     <div class="brow"><button class="btn p" onclick="go(2)">下一步　→</button></div>
   </div>
@@ -157,14 +170,14 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
         <span class="mcard-icon">🎙</span>
         <div>
           <div class="mcard-title">錄音</div>
-          <div class="mcard-desc">對方點連結，看到心願卡並聆聽你的聲音</div>
+          <div class="mcard-desc">對方點連結，看到專屬心願卡並聆聽你的聲音</div>
         </div>
       </div>
       <div class="mcard" id="mS" onclick="pick('skip')">
         <span class="mcard-icon">💌</span>
         <div>
           <div class="mcard-title">略過錄音，純文字</div>
-          <div class="mcard-desc">對方點連結，看到心願卡文字內容</div>
+          <div class="mcard-desc">對方點連結，看到專屬心願卡文字內容</div>
         </div>
       </div>
     </div>
@@ -206,14 +219,14 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
   <!-- STEP 4 -->
   <div class="panel" id="p4">
     <div id="uploadingBox" class="uploading-box">
-      <span class="spin">🌸</span>
-      <div class="upload-status" id="uploadStatus">正在上傳你的心願，請稍候…</div>
+      <span class="spin">✦</span>
+      <div class="upload-status" id="uploadStatus">智慧分析心願內容，生成專屬設計中…</div>
       <div class="upload-progress"><div class="upload-bar" id="uploadBar"></div></div>
     </div>
     <div id="doneBox" style="display:none">
       <span class="res-icon">🔗</span>
       <div class="res-title">專屬連結產生了！</div>
-      <div class="res-sub">把連結傳給對方，對方點開就能看到你的心願小卡。</div>
+      <div class="res-sub">把連結傳給對方，對方點開就能看到你的專屬心願小卡。</div>
       <div class="url-box">
         <div class="url-label">📎 心願小卡專屬連結</div>
         <div class="url-text" id="cardUrl"></div>
@@ -224,8 +237,8 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
         <h4>📱 如何用 LINE 傳送？</h4>
         <div class="sh"><div class="sh-num">1</div><div class="sh-txt">按上方「<strong>複製連結</strong>」</div></div>
         <div class="sh"><div class="sh-num">2</div><div class="sh-txt">打開 LINE → 找到對方 → 貼上連結 → 傳送</div></div>
-        <div class="sh"><div class="sh-num">3</div><div class="sh-txt">對方點連結 → 直接看到心願卡＋播放語音 🌸</div></div>
-        <div class="sh"><div class="sh-num">4</div><div class="sh-txt">對方也可以點「<strong>📥 下載儲存</strong>」永久保存到手機</div></div>
+        <div class="sh"><div class="sh-num">3</div><div class="sh-txt">對方點連結 → 直接看到<strong>專屬設計</strong>心願卡＋播放語音 🌸</div></div>
+        <div class="sh"><div class="sh-num">4</div><div class="sh-txt">連結永久有效，存到書籤隨時可以回來看</div></div>
       </div>
       <div class="div"></div>
       <button class="btn s full" onclick="again()">🌸 再做一張</button>
@@ -233,12 +246,12 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
     <div id="errBox" style="display:none">
       <div class="err-box"><p id="errMsg">上傳失敗，請稍後再試。</p></div>
       <div class="brow" style="justify-content:center">
-        <button class="btn s" onclick="go(3)">← 重新嘗試</button>
+        <button class="btn s" onclick="go(mode==='skip'?2:3)">← 重新嘗試</button>
       </div>
     </div>
   </div>
 
-  <!-- TOKEN SETUP (管理員) -->
+  <!-- TOKEN SETUP -->
   <div id="tokenSetup" style="display:none;margin-top:24px">
     <div class="token-box">
       <h4>🔑 管理員設定（首次使用）</h4>
@@ -254,18 +267,16 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
 <footer>
   🕊 臺北榮民總醫院蘇澳暨員山分院<br>
   善終是每個人的權利<br>
-  <span style="opacity:.5">本工具不收集任何個人資料</span>
+  <span style="opacity:.5">本工具不收集任何個人資料　✦ 智慧配色設計</span>
 </footer>
 <div class="toast" id="toast"></div>
 
 <script>
-var GITHUB_OWNER = 'd043606-cmd';
-var GITHUB_REPO  = 'card';
-var GITHUB_BRANCH= 'main';
-var BASE_URL     = 'https://d043606-cmd.github.io/card/';
-var STORAGE_KEY  = 'wish_card_token';
+var GITHUB_OWNER='d043606-cmd', GITHUB_REPO='card', GITHUB_BRANCH='main';
+var BASE_URL='https://d043606-cmd.github.io/card/';
+var STORAGE_KEY='wish_card_token';
 
-// petals
+// ── PETALS ──
 (function(){
   var c=['🌸','🌺','💮','🌷'],b=document.getElementById('pts');
   for(var i=0;i<14;i++){
@@ -275,11 +286,142 @@ var STORAGE_KEY  = 'wish_card_token';
   }
 })();
 
-document.getElementById('msg').oninput=function(){ document.getElementById('cc').textContent=this.value.length; };
+// ── AI THEME ENGINE ──
+var THEMES = {
+  grateful: {
+    name:'感恩暖金',
+    desc:'偵測到感謝與感恩，套用暖金色系配置',
+    h1:'#8B5E00', h2:'#B8860B', h3:'#D4A420',
+    bg:'linear-gradient(145deg,#8B5E00,#B8860B,#D4A420)',
+    bodyBg:'#FFFDF0', msgBg:'#FDF8E0', msgBorder:'#D4A420',
+    audioBg:'linear-gradient(135deg,#FDF0C0,#FAE090)',
+    audioLabel:'#8B5E00', footerBorder:'#F0D870',
+    petals:['🌼','✨','🌟','💛'], deco:'✦'
+  },
+  love: {
+    name:'深情玫瑰',
+    desc:'偵測到愛與思念，套用玫瑰粉紫色系配置',
+    h1:'#7A2040', h2:'#C8526A', h3:'#D96880',
+    bg:'linear-gradient(145deg,#7A2040,#C8526A,#E87090)',
+    bodyBg:'#FDF0F5', msgBg:'#FCE8EF', msgBorder:'#C8526A',
+    audioBg:'linear-gradient(135deg,#FCE0EA,#F9D0E0)',
+    audioLabel:'#A8394F', footerBorder:'#F0C0D0',
+    petals:['🌹','💗','🌸','💕'], deco:'♥'
+  },
+  hope: {
+    name:'希望清綠',
+    desc:'偵測到祝福與希望，套用清新綠色系配置',
+    h1:'#1A5C40', h2:'#2E8060', h3:'#3EA070',
+    bg:'linear-gradient(145deg,#1A5C40,#2E8060,#40A080)',
+    bodyBg:'#F0FAF5', msgBg:'#E0F5EC', msgBorder:'#2E8060',
+    audioBg:'linear-gradient(135deg,#C8ECD8,#B0E0C8)',
+    audioLabel:'#1A5C40', footerBorder:'#90D8B0',
+    petals:['🌿','🍀','🌱','💚'], deco:'✿'
+  },
+  sorry: {
+    name:'溫柔藍紫',
+    desc:'偵測到歉意與溫柔，套用淡藍紫色系配置',
+    h1:'#2A3A6A', h2:'#4A5A9A', h3:'#7A8ACA',
+    bg:'linear-gradient(145deg,#2A3A6A,#4A5A9A,#7080C0)',
+    bodyBg:'#F0F2FA', msgBg:'#E8ECF8', msgBorder:'#6070B0',
+    audioBg:'linear-gradient(135deg,#D0D8F0,#C0C8E8)',
+    audioLabel:'#3A4A8A', footerBorder:'#A0B0E0',
+    petals:['💙','🌀','💜','🫐'], deco:'◈'
+  },
+  parent: {
+    name:'穩重深青',
+    desc:'偵測到父母身份，套用穩重深青色系配置',
+    h1:'#1A4A50', h2:'#2E6B70', h3:'#3E8A8E',
+    bg:'linear-gradient(145deg,#1A4A50,#2E6B70,#3E8A8E)',
+    bodyBg:'#F0F8F8', msgBg:'#E0F2F4', msgBorder:'#2E6B70',
+    audioBg:'linear-gradient(135deg,#C0E4E8,#A8D4D8)',
+    audioLabel:'#1A4A50', footerBorder:'#80C4C8',
+    petals:['🕊','🌊','💠','🔷'], deco:'❖'
+  },
+  spouse: {
+    name:'浪漫玫紫',
+    desc:'偵測到伴侶關係，套用浪漫玫紫色系配置',
+    h1:'#5A2060', h2:'#8A4090', h3:'#C060B0',
+    bg:'linear-gradient(145deg,#5A2060,#8A4090,#C060B0)',
+    bodyBg:'#FAF0FC', msgBg:'#F4E0F8', msgBorder:'#9A50A0',
+    audioBg:'linear-gradient(135deg,#ECC8F4,#E0B8EC)',
+    audioLabel:'#6A2870', footerBorder:'#D090E0',
+    petals:['💜','🌺','💐','🫶'], deco:'❤'
+  },
+  child: {
+    name:'活力暖橙',
+    desc:'偵測到子女關係，套用活力暖橙色系配置',
+    h1:'#7A3010', h2:'#C05020', h3:'#E07030',
+    bg:'linear-gradient(145deg,#7A3010,#C05020,#E07030)',
+    bodyBg:'#FFF5F0', msgBg:'#FFE8D8', msgBorder:'#D06030',
+    audioBg:'linear-gradient(135deg,#FFD8B0,#FFC890)',
+    audioLabel:'#A03010', footerBorder:'#F0A870',
+    petals:['🧡','🌻','⭐','🔆'], deco:'★'
+  },
+  default: {
+    name:'心願粉紅',
+    desc:'專屬心願小卡預設配色',
+    h1:'#A8394F', h2:'#C8526A', h3:'#D96880',
+    bg:'linear-gradient(145deg,#A8394F,#C8526A,#D96880)',
+    bodyBg:'#FDF0F3', msgBg:'#FCE8ED', msgBorder:'#C8526A',
+    audioBg:'linear-gradient(135deg,#FCE8ED,#F9DCE4)',
+    audioLabel:'#A8394F', footerBorder:'#F5D0D8',
+    petals:['🌸','🌺','💮','🌷'], deco:'🌸'
+  }
+};
 
-var mode=null,mr=null,chunks=[],recBlob=null,stream=null,ticker=null,secs=0,cardId=null;
+function analyzeTheme(from, msg){
+  var text=(from+' '+msg).toLowerCase();
+  // emotion keywords
+  var grateful=['謝謝','感謝','感恩','謝','辛苦了','感激','謝您'];
+  var love=['愛你','愛妳','想你','想妳','思念','我愛','喜歡你','喜歡妳','掛念','牽掛'];
+  var hope=['加油','平安','快樂','幸福','健康','順利','祝福','希望你','希望妳','開心'];
+  var sorry=['對不起','抱歉','原諒','不好意思','對不住','遺憾','抱歉'];
+  // identity keywords
+  var parentIds=['媽媽','爸爸','阿嬤','阿公','母親','父親','媽','爸','奶奶','爺爺','外婆','外公'];
+  var spouseIds=['老公','老婆','先生','太太','丈夫','妻子','親愛的','老伴','伴侶','愛人'];
+  var childIds=['兒子','女兒','孩子','寶貝','小朋友','孫子','孫女'];
 
-// ── TOKEN MANAGEMENT ──
+  function hit(arr){ return arr.some(function(k){ return text.indexOf(k)>-1; }); }
+
+  // priority order
+  if(hit(spouseIds)) return 'spouse';
+  if(hit(childIds))  return 'child';
+  if(hit(parentIds)) return 'parent';
+  if(hit(sorry))     return 'sorry';
+  if(hit(love))      return 'love';
+  if(hit(grateful))  return 'grateful';
+  if(hit(hope))      return 'hope';
+  return 'default';
+}
+
+var currentThemeKey='default';
+
+function previewTheme(){
+  var from=document.getElementById('from').value;
+  var msg=document.getElementById('msg').value;
+  if(!from&&!msg){ document.getElementById('aiPreview').style.display='none'; return; }
+  var key=analyzeTheme(from,msg);
+  currentThemeKey=key;
+  var t=THEMES[key];
+  var el=document.getElementById('aiPreview');
+  el.style.display='block';
+  el.style.background=t.bodyBg;
+  el.style.border='1.5px solid '+t.footerBorder;
+  document.getElementById('aiLabel').style.color=t.h2;
+  document.getElementById('aiLabel').textContent='✦ 智慧配色：'+t.name;
+  document.getElementById('aiName').style.color=t.h1;
+  document.getElementById('aiName').textContent=t.deco+' '+t.name;
+  document.getElementById('aiDesc').style.color=t.h2;
+  document.getElementById('aiDesc').textContent=t.desc;
+}
+
+function onMsgInput(){
+  document.getElementById('cc').textContent=document.getElementById('msg').value.length;
+  previewTheme();
+}
+
+// ── TOKEN ──
 function getToken(){ return localStorage.getItem(STORAGE_KEY)||''; }
 function saveToken(){
   var t=document.getElementById('tokenInput').value.trim();
@@ -288,23 +430,20 @@ function saveToken(){
   document.getElementById('tokenSetup').style.display='none';
   showToast('✅ Token 已儲存！');
 }
-function clearToken(){
-  localStorage.removeItem(STORAGE_KEY);
-  document.getElementById('tokenSetup').style.display='block';
-  showToast('Token 已清除');
-}
-
-// show token setup if not set
-window.addEventListener('load', function(){
+window.addEventListener('load',function(){
   if(!getToken()) document.getElementById('tokenSetup').style.display='block';
 });
 
+// ── NAVIGATION ──
+var mode=null,mr=null,chunks=[],recBlob=null,stream=null,ticker=null,secs=0,cardId=null;
+
 function go(n){
   if(n===2&&!document.getElementById('msg').value.trim()){showToast('💌 請先寫下你的心願');return;}
-  if(n===4) {
+  if(n===4){
     document.getElementById('uploadingBox').style.display='block';
     document.getElementById('doneBox').style.display='none';
     document.getElementById('errBox').style.display='none';
+    document.getElementById('uploadBar').style.width='0%';
   }
   ['p1','p2','p3','p4'].forEach(function(id,i){document.getElementById(id).classList.toggle('on',i+1===n);});
   for(var i=1;i<=4;i++){
@@ -351,21 +490,18 @@ function startRec(){
     secs=0; updTimer(); ticker=setInterval(updTimer,1000);
   }).catch(function(){ showToast('⚠ 請允許使用麥克風'); });
 }
-
 function updTimer(){
   secs++;
   var m=Math.floor(secs/60),s=secs%60;
   document.getElementById('rTime').textContent=m+':'+(s<10?'0':'')+s;
   if(secs>=300) stopRec();
 }
-
 function stopRec(){
   clearInterval(ticker);
   if(mr&&mr.state!=='inactive') mr.stop();
   if(stream) stream.getTracks().forEach(function(t){t.stop();});
   document.getElementById('bStop').style.display='none';
 }
-
 function onStop(){
   var mime=chunks.length&&chunks[0].type?chunks[0].type:'audio/mp4';
   recBlob=new Blob(chunks,{type:mime});
@@ -379,7 +515,6 @@ function onStop(){
   document.getElementById('bNext').style.display='inline-flex';
   showToast('✅ 錄音完成！');
 }
-
 function redo(){
   recBlob=null; chunks=[]; secs=0;
   document.getElementById('rTime').textContent='0:00';
@@ -398,7 +533,6 @@ function setProgress(pct,msg){
   document.getElementById('uploadBar').style.width=pct+'%';
   document.getElementById('uploadStatus').textContent=msg;
 }
-
 function blobToBase64(blob){
   return new Promise(function(resolve){
     var r=new FileReader();
@@ -406,42 +540,31 @@ function blobToBase64(blob){
     r.readAsDataURL(blob);
   });
 }
+function randId(){ return Math.random().toString(36).substr(2,8)+Date.now().toString(36); }
 
-function randId(){
-  return Math.random().toString(36).substr(2,8)+Date.now().toString(36);
-}
-
-async function uploadToGitHub(path, content, isBase64){
+async function uploadToGitHub(path,content,isBase64){
   var token=getToken();
   var url='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/cards/'+path;
   var encoded=isBase64?content:btoa(unescape(encodeURIComponent(content)));
   var res=await fetch(url,{
     method:'PUT',
-    headers:{
-      'Authorization':'token '+token,
-      'Content-Type':'application/json',
-      'Accept':'application/vnd.github.v3+json'
-    },
-    body:JSON.stringify({message:'Add wish card: '+path, branch:GITHUB_BRANCH, content:encoded})
+    headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},
+    body:JSON.stringify({message:'Add wish card: '+path,branch:GITHUB_BRANCH,content:encoded})
   });
   if(!res.ok){
     var err=await res.json();
-    if(res.status===401){
-      localStorage.removeItem(STORAGE_KEY);
-      document.getElementById('tokenSetup').style.display='block';
-      throw new Error('Token 無效或已過期，請重新設定');
-    }
+    if(res.status===401){ localStorage.removeItem(STORAGE_KEY); document.getElementById('tokenSetup').style.display='block'; throw new Error('Token 無效或已過期，請重新設定'); }
     throw new Error(err.message||'上傳失敗（'+res.status+'）');
   }
   return await res.json();
 }
 
 async function uploadAndGenerate(){
-  var token=getToken();
-  if(!token){showToast('⚠ 請先設定 Token');document.getElementById('tokenSetup').style.display='block';return;}
+  if(!getToken()){showToast('⚠ 請先設定 Token');document.getElementById('tokenSetup').style.display='block';return;}
   var fromVal=document.getElementById('from').value.trim()||'送卡人';
   var toVal=document.getElementById('to').value.trim()||'親愛的你';
   var msgVal=document.getElementById('msg').value.trim();
+  var theme=THEMES[currentThemeKey];
   go(4);
   try {
     cardId=randId();
@@ -449,23 +572,28 @@ async function uploadAndGenerate(){
     var dateStr=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日';
     var audioFilename='';
 
+    setProgress(15,'✦ 智慧分析心願內容…');
+    await new Promise(function(r){setTimeout(r,800);});
+    setProgress(30,'✦ 生成「'+theme.name+'」專屬設計…');
+    await new Promise(function(r){setTimeout(r,600);});
+
     if(mode==='audio'&&recBlob){
-      setProgress(20,'正在上傳語音檔…');
+      setProgress(50,'正在上傳語音檔…');
       var ext=recBlob.type.includes('mp4')?'m4a':'webm';
       audioFilename=cardId+'_audio.'+ext;
       var b64=await blobToBase64(recBlob);
       await uploadToGitHub(audioFilename,b64,true);
     }
 
-    setProgress(65,'正在建立心願卡頁面…');
+    setProgress(75,'正在建立心願卡頁面…');
     var audioUrl=audioFilename
       ?'https://raw.githubusercontent.com/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/'+GITHUB_BRANCH+'/cards/'+audioFilename
       :'';
-    var cardHtml=buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl);
+    var cardHtml=buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme);
     await uploadToGitHub(cardId+'.html',cardHtml,false);
 
     setProgress(100,'完成！');
-    await new Promise(function(r){setTimeout(r,600);});
+    await new Promise(function(r){setTimeout(r,500);});
 
     var finalUrl=BASE_URL+'cards/'+cardId+'.html';
     document.getElementById('cardUrl').textContent=finalUrl;
@@ -479,43 +607,49 @@ async function uploadAndGenerate(){
   }
 }
 
-function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl){
+// ── BUILD CARD PAGE ──
+function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme){
   var esc=function(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var petals=theme.petals.join('"+"');
   var audioSection=audioUrl
-    ?'<div class="audio-section"><div class="audio-label">🎙 聆聽心願語音</div><audio controls style="width:100%;margin-top:8px" src="'+esc(audioUrl)+'"></audio></div>'
+    ?'<div class="audio-section"><div class="audio-label">'+theme.deco+' 聆聽心願語音</div><audio controls style="width:100%;margin-top:8px" src="'+esc(audioUrl)+'"></audio></div>'
     :'';
-  return '<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8">'
-    +'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
-    +'<title>💌 '+esc(fromVal)+' 給 '+esc(toVal)+' 的心願小卡</title>'
-    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">'
-    +'<style>*{margin:0;padding:0;box-sizing:border-box}'
-    +'body{min-height:100vh;background:linear-gradient(160deg,#fce8ed,#f5d0d8 30%,#fdf0f3 65%,#fff8fa);font-family:"Noto Sans TC",sans-serif;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:16px}'
+  var css='*{margin:0;padding:0;box-sizing:border-box}'
+    +'body{min-height:100vh;background:'+theme.bodyBg+';font-family:"Noto Sans TC",sans-serif;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:16px}'
     +'.bg{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:0}'
     +'.pt{position:absolute;opacity:.13;animation:fall linear infinite}'
     +'@keyframes fall{0%{transform:translateY(-40px) rotate(0);opacity:0}10%{opacity:.13}90%{opacity:.07}100%{transform:translateY(105vh) rotate(300deg);opacity:0}}'
-    +'.card{position:relative;z-index:1;background:#fff;border-radius:24px;max-width:480px;width:100%;box-shadow:0 16px 56px rgba(168,57,79,.18);overflow:hidden}'
-    +'.ct{background:linear-gradient(145deg,#a8394f,#c8526a,#d96880);padding:32px 28px 24px;position:relative;overflow:hidden}'
+    +'.card{position:relative;z-index:1;background:#fff;border-radius:24px;max-width:480px;width:100%;box-shadow:0 16px 56px rgba(0,0,0,.15);overflow:hidden}'
+    +'.ct{background:'+theme.bg+';padding:32px 28px 24px;position:relative;overflow:hidden}'
     +'.ct::before{content:"";position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,.08)}'
-    +'.ct::after{content:"🌸";position:absolute;bottom:-8px;right:20px;font-size:64px;opacity:.12}'
     +'.ftag{font-size:11px;color:rgba(255,255,255,.7);letter-spacing:2px;margin-bottom:8px}'
+    +'.theme-name{font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;margin-bottom:4px}'
     +'.toname{font-family:"Noto Serif TC",serif;font-size:28px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:4px}'
     +'.fromname{font-size:13px;color:rgba(255,255,255,.75)}'
-    +'.cb{padding:24px 28px 28px}'
-    +'.msgbox{background:#fdf0f3;border-radius:14px;padding:18px 20px;margin-bottom:20px;border-left:3px solid #c8526a}'
+    +'.cb{padding:24px 28px 28px;background:'+theme.bodyBg+'}'
+    +'.msgbox{background:'+theme.msgBg+';border-radius:14px;padding:18px 20px;margin-bottom:20px;border-left:3px solid '+theme.msgBorder+'}'
     +'.msgtxt{font-size:16px;color:#2d1f28;line-height:1.95;white-space:pre-wrap;font-family:"Noto Serif TC",serif}'
-    +'.audio-section{background:linear-gradient(135deg,#fce8ed,#f9dce4);border-radius:14px;padding:16px 18px;margin-bottom:16px}'
-    +'.audio-label{font-size:12px;color:#a8394f;font-weight:700;letter-spacing:1px;margin-bottom:6px}'
-    +'.drow{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid #f5d0d8;flex-wrap:wrap;gap:8px}'
+    +'.audio-section{background:'+theme.audioBg+';border-radius:14px;padding:16px 18px;margin-bottom:16px}'
+    +'.audio-label{font-size:12px;color:'+theme.audioLabel+';font-weight:700;letter-spacing:1px;margin-bottom:6px}'
+    +'.drow{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid '+theme.footerBorder+';flex-wrap:wrap;gap:8px}'
     +'.dtxt{font-size:11px;color:#8a6f78;line-height:1.7}'
-    +'.sbtn{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#c8526a,#a8394f);color:#fff;padding:8px 18px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:"Noto Sans TC",sans-serif;transition:all .2s}'
+    +'.sbtn{display:inline-flex;align-items:center;gap:5px;background:'+theme.bg+';color:#fff;padding:8px 18px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:"Noto Sans TC",sans-serif;transition:all .2s}'
     +'.sbtn:hover{transform:translateY(-1px)}'
-    +'.fn{text-align:center;font-size:11px;color:#b0909a;line-height:1.8;position:relative;z-index:1}'
-    +'</style></head><body>'
+    +'.fn{text-align:center;font-size:11px;color:#8a6f78;line-height:1.8;position:relative;z-index:1}';
+
+  return '<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8">'
+    +'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
+    +'<title>'+theme.deco+' '+esc(fromVal)+' 給 '+esc(toVal)+' 的心願小卡</title>'
+    +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">'
+    +'<style>'+css+'</style></head><body>'
     +'<div class="bg" id="bg"></div>'
     +'<div class="card">'
-    +'<div class="ct"><div class="ftag">💮 心願小卡</div>'
+    +'<div class="ct">'
+    +'<div class="theme-name">✦ '+theme.name+'　智慧專屬設計</div>'
+    +'<div class="ftag">💮 心願小卡</div>'
     +'<div class="toname">親愛的<br>'+esc(toVal)+'</div>'
-    +'<div class="fromname">來自 '+esc(fromVal)+' 的心意 🌸</div></div>'
+    +'<div class="fromname">來自 '+esc(fromVal)+' 的心意 '+theme.deco+'</div>'
+    +'</div>'
     +'<div class="cb">'
     +'<div class="msgbox"><div class="msgtxt">'+esc(msgVal)+'</div></div>'
     +audioSection
@@ -523,8 +657,9 @@ function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl){
     +'<div class="dtxt">🕊 '+esc(dateStr)+'<br>臺北榮民總醫院蘇澳暨員山分院</div>'
     +'<button class="sbtn" onclick="savePage()">📥 下載儲存</button>'
     +'</div></div></div>'
-    +'<div class="fn">善終是每個人的權利 🌸<br>臺北榮民總醫院蘇澳暨員山分院</div>'
-    +'<script>(function(){var e=["🌸","🌺","💮","🌷"],b=document.getElementById("bg");'
+    +'<div class="fn">善終是每個人的權利　'+theme.deco+'<br>臺北榮民總醫院蘇澳暨員山分院</div>'
+    +'<script>(function(){'
+    +'var e=["'+theme.petals.join('","')+'"],b=document.getElementById("bg");'
     +'for(var i=0;i<12;i++){var p=document.createElement("div");p.className="pt";p.textContent=e[i%e.length];'
     +'p.style.cssText="left:"+Math.random()*100+"vw;font-size:"+(14+Math.random()*14)+"px;animation-duration:"+(14+Math.random()*16)+"s;animation-delay:"+(-Math.random()*20)+"s";'
     +'b.appendChild(p);}})();'
@@ -542,14 +677,15 @@ function openUrl(){ window.open(document.getElementById('cardUrl').textContent,'
 
 function again(){
   recBlob=null; chunks=[]; mode=null; secs=0; cardId=null;
+  currentThemeKey='default';
   document.getElementById('from').value='';
   document.getElementById('to').value='';
   document.getElementById('msg').value='';
   document.getElementById('cc').textContent='0';
+  document.getElementById('aiPreview').style.display='none';
   document.getElementById('mA').classList.remove('picked');
   document.getElementById('mS').classList.remove('picked');
   document.getElementById('mNext').disabled=true;
-  document.getElementById('uploadBar').style.width='0%';
   redo(); go(1);
 }
 
