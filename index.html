@@ -631,6 +631,12 @@ async function uploadAndGenerate(){
     await new Promise(function(r){setTimeout(r,500);});
 
     var finalUrl=BASE_URL+'cards/'+cardId+'.html';
+
+    // ── 記錄統計數據 ──
+    try {
+      await recordStats(cardId, mode, currentThemeKey);
+    } catch(e){ console.log('stats error:',e); }
+
     document.getElementById('cardUrl').textContent=finalUrl;
     document.getElementById('uploadingBox').style.display='none';
     document.getElementById('doneBox').style.display='block';
@@ -782,6 +788,49 @@ function selectManualTheme(key){
   document.getElementById('aiName').textContent=t.deco+' '+t.name;
   document.getElementById('aiDesc').style.color=t.h2;
   document.getElementById('aiDesc').textContent='已手動套用此配色主題';
+}
+
+
+// ── STATS RECORDING ──
+async function recordStats(id, mode, theme){
+  var token=getToken();
+  if(!token) return;
+  var statsUrl='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/stats.json';
+
+  // fetch existing stats
+  var existing={total:0,audio:0,textOnly:0,themes:{},byDate:{},avgMsgLen:0,totalMsgLen:0};
+  try {
+    var r=await fetch(statsUrl,{headers:{'Authorization':'token '+token,'Accept':'application/vnd.github.v3+json'}});
+    if(r.ok){
+      var data=await r.json();
+      existing=JSON.parse(atob(data.content.replace(/\n/g,'')));
+      existing._sha=data.sha;
+    }
+  } catch(e){}
+
+  // update stats
+  var today=new Date().toISOString().slice(0,10);
+  existing.total=(existing.total||0)+1;
+  if(mode==='audio') existing.audio=(existing.audio||0)+1;
+  else existing.textOnly=(existing.textOnly||0)+1;
+  existing.themes=existing.themes||{};
+  existing.themes[theme]=(existing.themes[theme]||0)+1;
+  existing.byDate=existing.byDate||{};
+  existing.byDate[today]=(existing.byDate[today]||0)+1;
+  var msgLen=document.getElementById('msg').value.trim().length;
+  existing.totalMsgLen=(existing.totalMsgLen||0)+msgLen;
+  existing.avgMsgLen=Math.round(existing.totalMsgLen/existing.total);
+  existing.lastUpdated=new Date().toISOString();
+
+  // save back
+  var sha=existing._sha; delete existing._sha;
+  var body={message:'Update stats: '+today,branch:GITHUB_BRANCH,content:btoa(unescape(encodeURIComponent(JSON.stringify(existing,null,2))))};
+  if(sha) body.sha=sha;
+  await fetch(statsUrl,{
+    method:'PUT',
+    headers:{'Authorization':'token '+token,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},
+    body:JSON.stringify(body)
+  });
 }
 
 function showToast(m){
