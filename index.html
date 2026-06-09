@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🌸 心願小卡 — 給你最深的話｜臺北榮民總醫院蘇澳暨員山分院</title>
-<meta name="description" content="錄下你的聲音或影像，送出一張永遠保存的心願小卡。臺北榮民總醫院蘇澳暨員山分院">
+<meta name="description" content="錄下你的聲音，送出一張永遠保存的心願小卡。臺北榮民總醫院蘇澳暨員山分院">
 <meta name="theme-color" content="#c8526a">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
 <style>
-:root{--rose:#c8526a;--rose-d:#a8394f;--rose-l:#f5d0d8;--petal:#fce8ed;--ink:#2d1f28;--mist:#8a6f78;--sage:#6a9e88;--white:#fff}
+:root{--rose:#c8526a;--rose-d:#a8394f;--rose-l:#f5d0d8;--petal:#fce8ed;--ink:#2d1f28;--mist:#8a6f78;--sage:#6a9e88}
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{min-height:100vh;background:linear-gradient(160deg,#fce8ed,#f5d0d8 25%,#fdf0f3 65%,#fff8fa);font-family:'Noto Sans TC',sans-serif;color:var(--ink);overflow-x:hidden}
 .petals{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
@@ -37,18 +37,18 @@ body{min-height:100vh;background:linear-gradient(160deg,#fce8ed,#f5d0d8 25%,#fdf
 .fg label{font-size:12px;color:var(--mist);font-weight:500;display:block;margin-bottom:5px}
 .fg input,.fg textarea{width:100%;background:var(--petal);border:1.5px solid var(--rose-l);border-radius:12px;padding:10px 13px;font-size:14px;font-family:'Noto Sans TC',sans-serif;color:var(--ink);outline:none;resize:none;transition:border-color .2s,box-shadow .2s}
 .fg input:focus,.fg textarea:focus{border-color:var(--rose);box-shadow:0 0 0 3px rgba(200,82,106,.1)}
-.fg textarea{min-height:100px;line-height:1.85}
+.fg textarea{min-height:110px;line-height:1.85}
 .cc{text-align:right;font-size:11px;color:var(--mist);margin-top:3px}
-/* mode cards */
-.modes{display:grid;grid-template-columns:1fr;gap:10px;margin-bottom:16px}
-.mcard{border:2px solid var(--rose-l);border-radius:16px;padding:16px 18px;cursor:pointer;background:var(--petal);transition:all .2s;display:flex;align-items:center;gap:14px}
+.modes{display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:16px}
+.mcard{border:2px solid var(--rose-l);border-radius:16px;padding:18px 20px;cursor:pointer;background:var(--petal);transition:all .2s;display:flex;align-items:center;gap:16px}
 .mcard:hover{border-color:var(--rose);transform:translateY(-1px)}
 .mcard.picked{border-color:var(--rose);background:#fce0e6;box-shadow:0 0 0 3px rgba(200,82,106,.1)}
-.mcard-icon{font-size:32px;flex-shrink:0}
-.mcard-info{}
-.mcard-title{font-size:16px;font-weight:700;color:var(--rose-d);margin-bottom:2px}
-.mcard-desc{font-size:12px;color:var(--mist);line-height:1.5}
-/* recorder */
+.mcard-icon{font-size:36px;flex-shrink:0}
+.mcard-title{font-size:16px;font-weight:700;color:var(--rose-d);margin-bottom:4px}
+.mcard-desc{font-size:12px;color:var(--mist);line-height:1.6}
+.mcard-tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-top:5px}
+.tag-dual{background:#e8f5f1;color:#2e8060}
+.tag-img{background:#fce8ed;color:var(--rose-d)}
 .rec-box{background:var(--petal);border-radius:16px;padding:24px;text-align:center;margin-bottom:14px}
 .rec-ring{width:90px;height:90px;border-radius:50%;background:var(--rose-l);margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:36px;transition:all .3s}
 .rec-ring.go{background:var(--rose);animation:throb 1.1s ease-in-out infinite}
@@ -60,10 +60,7 @@ body{min-height:100vh;background:linear-gradient(160deg,#fce8ed,#f5d0d8 25%,#fdf
 .wave.go .wb{animation:wv .9s ease-in-out infinite}
 .wb:nth-child(2n){animation-delay:.08s}.wb:nth-child(3n){animation-delay:.16s}.wb:nth-child(4n){animation-delay:.24s}
 @keyframes wv{0%,100%{height:5px;opacity:.25}50%{height:26px;opacity:.9}}
-video#liveVid{width:100%;border-radius:12px;margin-bottom:10px;display:none;background:#000;max-height:220px;object-fit:cover}
-video#playVid{width:100%;border-radius:12px;margin-top:8px;display:none;max-height:220px}
-audio#playAud{width:100%;margin-top:8px;display:none}
-/* buttons */
+audio#playAud{width:100%;margin-top:10px;display:none}
 .btn{display:inline-flex;align-items:center;gap:7px;padding:11px 20px;border-radius:100px;font-size:14px;font-weight:700;cursor:pointer;border:none;outline:none;transition:all .22s;font-family:'Noto Sans TC',sans-serif;white-space:nowrap}
 .btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
 .p{background:linear-gradient(135deg,var(--rose),var(--rose-d));color:#fff;box-shadow:0 4px 14px rgba(180,60,80,.3)}
@@ -72,27 +69,29 @@ audio#playAud{width:100%;margin-top:8px;display:none}
 .s:hover{background:var(--rose-l)}
 .g{background:transparent;color:var(--mist);font-size:13px}
 .g:hover{color:var(--rose)}
-.d{background:linear-gradient(135deg,#e06,#a00);color:#fff}
+.d{background:linear-gradient(135deg,#c8526a,#a00);color:#fff}
 .dl{background:linear-gradient(135deg,var(--sage),#4a8e70);color:#fff;box-shadow:0 4px 14px rgba(100,160,130,.3)}
 .dl:hover:not(:disabled){transform:translateY(-2px)}
-.full{width:100%;justify-content:center}
+.full{width:100%;justify-content:center;margin-bottom:10px}
 .brow{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:20px}
-/* step 4 result */
-.result-icon{font-size:56px;display:block;text-align:center;margin-bottom:12px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
+/* step 4 */
+.res-icon{font-size:54px;display:block;text-align:center;margin-bottom:12px;animation:pop .5s cubic-bezier(.34,1.56,.64,1)}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
-.result-title{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:var(--rose-d);text-align:center;margin-bottom:6px}
-.result-sub{font-size:13px;color:var(--mist);text-align:center;margin-bottom:22px;line-height:1.7}
-.dl-card{background:var(--petal);border-radius:16px;padding:20px;margin-bottom:12px}
-.dl-card h4{font-size:14px;font-weight:700;color:var(--rose-d);margin-bottom:10px}
-.dl-info{font-size:12px;color:var(--mist);line-height:1.7;margin-top:10px}
-.steps-how{background:var(--petal);border-radius:14px;padding:16px 18px;margin-bottom:12px}
-.steps-how h4{font-size:13px;font-weight:700;color:var(--rose-d);margin-bottom:10px}
+.res-title{font-family:'Noto Serif TC',serif;font-size:22px;font-weight:900;color:var(--rose-d);text-align:center;margin-bottom:6px}
+.res-sub{font-size:13px;color:var(--mist);text-align:center;margin-bottom:20px;line-height:1.7}
+.dl-section{background:var(--petal);border-radius:16px;padding:18px 20px;margin-bottom:12px}
+.dl-section h4{font-size:13px;font-weight:700;color:var(--rose-d);margin-bottom:12px}
+.dl-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.dl-row:last-child{margin-bottom:0}
+.dl-label{font-size:13px;color:var(--ink);flex:1;line-height:1.4}
+.dl-label small{display:block;font-size:11px;color:var(--mist)}
+.how-box{background:#f0faf5;border-radius:16px;padding:16px 18px;margin-bottom:12px;border:1px solid #c8e8d8}
+.how-box h4{font-size:13px;font-weight:700;color:#2e8060;margin-bottom:10px}
 .sh{display:flex;gap:10px;align-items:flex-start;margin-bottom:8px}
 .sh:last-child{margin-bottom:0}
-.sh-num{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:var(--rose);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
-.sh-txt{font-size:12px;color:var(--mist);line-height:1.6}
-.sh-txt strong{color:var(--ink)}
-.note{font-size:12px;color:var(--mist);line-height:1.8;background:var(--petal);border-radius:10px;padding:10px 14px;margin-top:10px}
+.sh-num{width:22px;height:22px;border-radius:50%;flex-shrink:0;background:#2e8060;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.sh-txt{font-size:12px;color:#2a5a40;line-height:1.6}
+.sh-txt strong{color:#1a3a28}
 .div{height:1px;background:var(--rose-l);margin:14px 0}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--rose-d);color:#fff;padding:10px 20px;border-radius:100px;font-size:13px;font-weight:500;box-shadow:0 8px 32px rgba(180,60,80,.3);z-index:999;opacity:0;pointer-events:none;transition:transform .35s cubic-bezier(.34,1.56,.64,1),opacity .35s;white-space:nowrap}
 .toast.on{transform:translateX(-50%) translateY(0);opacity:1}
@@ -105,7 +104,7 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
   <div class="logo">
     <span class="logo-icon">🌸</span>
     <h1>給你最深的話</h1>
-    <p>把心意錄下來或寫下來，傳給最重要的人</p>
+    <p>把心意寫下來，錄下你的聲音，傳給最重要的人</p>
   </div>
 
   <div class="prog-row">
@@ -113,9 +112,9 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
     <div class="prog-line"></div>
     <div class="prog-step"><div class="prog-dot" id="d2">2</div><div class="prog-lbl">選方式</div></div>
     <div class="prog-line"></div>
-    <div class="prog-step"><div class="prog-dot" id="d3">3</div><div class="prog-lbl">錄製</div></div>
+    <div class="prog-step"><div class="prog-dot" id="d3">3</div><div class="prog-lbl">錄音</div></div>
     <div class="prog-line"></div>
-    <div class="prog-step"><div class="prog-dot" id="d4">4</div><div class="prog-lbl">下載分享</div></div>
+    <div class="prog-step"><div class="prog-dot" id="d4">4</div><div class="prog-lbl">下載傳送</div></div>
   </div>
 
   <!-- STEP 1 -->
@@ -123,8 +122,8 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
     <div class="ptitle">🌸 寫下你的心願</div>
     <div class="psub">先填好姓名和想說的話。</div>
     <div class="row2">
-      <div class="fg"><label>你的名字</label><input id="from" placeholder="例：阿嬤、媽媽"></div>
-      <div class="fg"><label>對方的名字</label><input id="to" placeholder="例：小華、孩子"></div>
+      <div class="fg"><label>你的名字</label><input id="from" placeholder="例：阿嬤、媽媽、小明"></div>
+      <div class="fg"><label>對方的名字</label><input id="to" placeholder="例：小華、我的孩子"></div>
     </div>
     <div class="fg">
       <label>想說的話（最多150字）</label>
@@ -137,27 +136,22 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
   <!-- STEP 2 -->
   <div class="panel" id="p2">
     <div class="ptitle">選擇方式</div>
-    <div class="psub">選一種，或直接略過錄製。</div>
+    <div class="psub">選一種，完成後會自動下載檔案。</div>
     <div class="modes">
       <div class="mcard" id="mA" onclick="pick('audio')">
         <span class="mcard-icon">🎙</span>
-        <div class="mcard-info">
+        <div>
           <div class="mcard-title">錄音</div>
-          <div class="mcard-desc">下載音訊檔（.m4a）<br>LINE 可直接傳送，對方直接播放</div>
-        </div>
-      </div>
-      <div class="mcard" id="mV" onclick="pick('video')">
-        <span class="mcard-icon">🎬</span>
-        <div class="mcard-info">
-          <div class="mcard-title">錄影</div>
-          <div class="mcard-desc">下載影片檔（.mp4）<br>LINE 可直接傳送，對方直接觀看</div>
+          <div class="mcard-desc">錄下你的聲音，讓對方聽到你說話</div>
+          <span class="mcard-tag tag-dual">下載：心願圖片 ＋ 語音檔</span>
         </div>
       </div>
       <div class="mcard" id="mS" onclick="pick('skip')">
         <span class="mcard-icon">💌</span>
-        <div class="mcard-info">
-          <div class="mcard-title">略過錄製</div>
-          <div class="mcard-desc">下載心願圖片（.jpg）<br>LINE 可直接傳送圖片給對方</div>
+        <div>
+          <div class="mcard-title">略過錄音，純圖片</div>
+          <div class="mcard-desc">只用文字傳遞心意，簡單乾淨</div>
+          <span class="mcard-tag tag-img">下載：心願圖片</span>
         </div>
       </div>
     </div>
@@ -169,11 +163,9 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
 
   <!-- STEP 3 -->
   <div class="panel" id="p3">
-    <div class="ptitle" id="rTitle">🎙 錄製</div>
-    <div class="psub">按「開始錄製」，說完再按「停止」。</div>
-    <video id="liveVid" autoplay muted playsinline></video>
-    <video id="playVid" controls></video>
-    <div class="rec-box" id="recBox">
+    <div class="ptitle">🎙 錄製你的心願語音</div>
+    <div class="psub">按「開始錄音」，說完後按「停止」。</div>
+    <div class="rec-box">
       <div class="rec-ring" id="ring">🎙</div>
       <div class="wave" id="wv">
         <div class="wb" style="height:6px"></div><div class="wb" style="height:10px"></div>
@@ -184,42 +176,38 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
         <div class="wb" style="height:6px"></div><div class="wb" style="height:10px"></div>
       </div>
       <div class="rec-time" id="rTime">0:00</div>
-      <div class="rec-hint" id="rHint">準備好了，就按「開始錄製」</div>
+      <div class="rec-hint" id="rHint">準備好了，就按「開始錄音」</div>
       <audio id="playAud" controls></audio>
     </div>
     <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
-      <button class="btn p" id="bStart" onclick="startRec()">⏺ 開始錄製</button>
+      <button class="btn p" id="bStart" onclick="startRec()">⏺ 開始錄音</button>
       <button class="btn d" id="bStop" onclick="stopRec()" style="display:none">⏹ 停止</button>
       <button class="btn s" id="bRedo" onclick="redo()" style="display:none">🔄 重錄</button>
     </div>
     <div class="brow">
       <button class="btn g" onclick="go(2)">← 上一步</button>
-      <button class="btn p" id="bNext" style="display:none" onclick="go(4)">完成　→</button>
+      <button class="btn p" id="bNext" style="display:none" onclick="go(4)">完成，下載檔案　→</button>
     </div>
   </div>
 
   <!-- STEP 4 -->
   <div class="panel" id="p4">
-    <span class="result-icon" id="resIcon">💌</span>
-    <div class="result-title" id="resTitle">心願小卡準備好了！</div>
-    <div class="result-sub" id="resSub">選擇下方的下載方式，再用 LINE 傳給對方。</div>
+    <span class="res-icon" id="resIcon">💌</span>
+    <div class="res-title" id="resTitle">正在準備你的心願小卡…</div>
+    <div class="res-sub" id="resSub">請稍候，馬上自動下載</div>
 
-    <div class="dl-card" id="dlCard">
-      <h4 id="dlLabel">⬇ 下載並分享</h4>
-      <button class="btn dl full" id="dlBtn" onclick="doDownload()">⬇ 下載檔案</button>
-      <div class="dl-info" id="dlInfo"></div>
+    <div class="dl-section" id="dlSection" style="display:none">
+      <h4 id="dlTitle">⬇ 點下方按鈕下載</h4>
+      <div id="dlButtons"></div>
     </div>
 
-    <div class="steps-how" id="howBox">
-      <h4>📱 如何用 LINE 傳送？</h4>
-      <div class="sh"><div class="sh-num">1</div><div class="sh-txt"><strong>下載檔案</strong>後存到手機「檔案 App」→「下載項目」</div></div>
-      <div class="sh"><div class="sh-num">2</div><div class="sh-txt">打開 LINE → 找到對方 → 左下角「＋」→ <strong id="lineType">選「檔案」</strong></div></div>
-      <div class="sh"><div class="sh-num">3</div><div class="sh-txt">找到下載的檔案，點一下傳送</div></div>
-      <div class="sh"><div class="sh-num">4</div><div class="sh-txt">對方收到後，<strong id="openHint">直接點開播放</strong></div></div>
+    <div class="how-box" id="howBox" style="display:none">
+      <h4 id="howTitle">📱 如何用 LINE 傳送？</h4>
+      <div id="howSteps"></div>
     </div>
 
     <div class="div"></div>
-    <button class="btn s full" onclick="again()">🌸 再做一張</button>
+    <button class="btn s full" onclick="again()" style="margin-top:4px">🌸 再做一張</button>
   </div>
 </div>
 
@@ -231,6 +219,7 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
 <div class="toast" id="toast"></div>
 
 <script>
+// petals
 (function(){
   var c=['🌸','🌺','💮','🌷'],b=document.getElementById('pts');
   for(var i=0;i<14;i++){
@@ -246,6 +235,7 @@ var mode=null,mr=null,chunks=[],recBlob=null,stream=null,ticker=null,secs=0;
 
 function go(n){
   if(n===2&&!document.getElementById('msg').value.trim()){showToast('💌 請先寫下你的心願');return;}
+  if(n===4) buildStep4();
   ['p1','p2','p3','p4'].forEach(function(id,i){document.getElementById(id).classList.toggle('on',i+1===n);});
   for(var i=1;i<=4;i++){
     var d=document.getElementById('d'+i);
@@ -257,238 +247,90 @@ function go(n){
 
 function pick(m){
   mode=m;
-  ['mA','mV','mS'].forEach(function(id){document.getElementById(id).classList.remove('picked');});
-  document.getElementById(m==='audio'?'mA':m==='video'?'mV':'mS').classList.add('picked');
+  document.getElementById('mA').classList.toggle('picked',m==='audio');
+  document.getElementById('mS').classList.toggle('picked',m==='skip');
   document.getElementById('mNext').disabled=false;
 }
 
 function nextFromMode(){
   if(!mode){showToast('請先選擇方式');return;}
-  if(mode==='skip'){
-    buildStep4();
-    go(4);
-  } else {
-    document.getElementById('rTitle').textContent=mode==='audio'?'🎙 錄製語音':'🎬 錄製影片';
-    document.getElementById('recBox').style.display=mode==='audio'?'block':'none';
-    go(3);
-  }
+  if(mode==='skip') go(4);
+  else go(3);
 }
 
+// ── RECORDING ──
 function startRec(){
   chunks=[];recBlob=null;
-  var constraints=mode==='video'?{video:{width:640,height:480,facingMode:'user'},audio:true}:{audio:true};
-  navigator.mediaDevices.getUserMedia(constraints).then(function(s){
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(s){
     stream=s;
-    if(mode==='video'){
-      var lv=document.getElementById('liveVid');lv.srcObject=s;lv.style.display='block';
-      document.getElementById('playVid').style.display='none';
-    }
-    // pick best supported mime
-    var mimes=mode==='video'
-      ?['video/mp4;codecs=h264','video/mp4','video/webm;codecs=vp9','video/webm']
-      :['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm','audio/ogg'];
+    var mimes=['audio/mp4','audio/aac','audio/webm;codecs=opus','audio/webm','audio/ogg'];
     var mime=mimes.find(function(m){return MediaRecorder.isTypeSupported(m);})||'';
     mr=new MediaRecorder(s,mime?{mimeType:mime}:{});
     mr.ondataavailable=function(e){if(e.data.size>0)chunks.push(e.data);};
-    mr.onstop=onStop;mr.start(100);
+    mr.onstop=onStop; mr.start(100);
     document.getElementById('bStart').style.display='none';
     document.getElementById('bStop').style.display='inline-flex';
     document.getElementById('bRedo').style.display='none';
     document.getElementById('bNext').style.display='none';
-    if(mode==='audio'){
-      document.getElementById('ring').classList.add('go');
-      document.getElementById('ring').textContent='🔴';
-      document.getElementById('wv').classList.add('go');
-      document.getElementById('rHint').textContent='正在錄音… 說完後按「停止」';
-      document.getElementById('playAud').style.display='none';
-    }
-    secs=0;updTimer();ticker=setInterval(updTimer,1000);
-  }).catch(function(){showToast('⚠ 請允許使用麥克風／相機');});
+    document.getElementById('ring').classList.add('go');
+    document.getElementById('ring').textContent='🔴';
+    document.getElementById('wv').classList.add('go');
+    document.getElementById('rHint').textContent='正在錄音… 說完後按「停止」';
+    document.getElementById('playAud').style.display='none';
+    secs=0; updTimer(); ticker=setInterval(updTimer,1000);
+  }).catch(function(){ showToast('⚠ 請允許使用麥克風'); });
 }
 
 function updTimer(){
   secs++;
   var m=Math.floor(secs/60),s=secs%60;
   document.getElementById('rTime').textContent=m+':'+(s<10?'0':'')+s;
-  if(secs>=300)stopRec();
+  if(secs>=300) stopRec();
 }
 
 function stopRec(){
   clearInterval(ticker);
-  if(mr&&mr.state!=='inactive')mr.stop();
-  if(stream)stream.getTracks().forEach(function(t){t.stop();});
+  if(mr&&mr.state!=='inactive') mr.stop();
+  if(stream) stream.getTracks().forEach(function(t){t.stop();});
   document.getElementById('bStop').style.display='none';
 }
 
 function onStop(){
-  var mime=chunks.length&&chunks[0].type?chunks[0].type:(mode==='video'?'video/mp4':'audio/mp4');
+  var mime=chunks.length&&chunks[0].type?chunks[0].type:'audio/mp4';
   recBlob=new Blob(chunks,{type:mime});
   var url=URL.createObjectURL(recBlob);
-  if(mode==='audio'){
-    document.getElementById('ring').classList.remove('go');
-    document.getElementById('ring').textContent='✅';
-    document.getElementById('wv').classList.remove('go');
-    document.getElementById('rHint').textContent='錄製完成！播放確認一下 😊';
-    var pa=document.getElementById('playAud');pa.src=url;pa.style.display='block';
-  } else {
-    document.getElementById('liveVid').style.display='none';
-    var pv=document.getElementById('playVid');pv.src=url;pv.style.display='block';
-  }
+  document.getElementById('ring').classList.remove('go');
+  document.getElementById('ring').textContent='✅';
+  document.getElementById('wv').classList.remove('go');
+  document.getElementById('rHint').textContent='錄音完成！播放確認一下 😊';
+  var pa=document.getElementById('playAud'); pa.src=url; pa.style.display='block';
   document.getElementById('bRedo').style.display='inline-flex';
   document.getElementById('bNext').style.display='inline-flex';
-  showToast('✅ 錄製完成！');
+  showToast('✅ 錄音完成！');
 }
 
 function redo(){
-  recBlob=null;chunks=[];secs=0;
+  recBlob=null; chunks=[]; secs=0;
   document.getElementById('rTime').textContent='0:00';
   document.getElementById('ring').classList.remove('go');
   document.getElementById('ring').textContent='🎙';
   document.getElementById('wv').classList.remove('go');
-  document.getElementById('rHint').textContent='準備好了，就按「開始錄製」';
+  document.getElementById('rHint').textContent='準備好了，就按「開始錄音」';
   document.getElementById('playAud').style.display='none';
-  document.getElementById('playVid').style.display='none';
-  document.getElementById('liveVid').style.display='none';
-  if(mode==='audio')document.getElementById('recBox').style.display='block';
   document.getElementById('bStart').style.display='inline-flex';
   document.getElementById('bRedo').style.display='none';
   document.getElementById('bNext').style.display='none';
 }
 
-// ── STEP 4 setup ──
-function buildStep4(){
-  var toVal=document.getElementById('to').value.trim()||'親愛的你';
-  var fromVal=document.getElementById('from').value.trim()||'送卡人';
-  var msgVal=document.getElementById('msg').value.trim();
-
-  if(mode==='skip'){
-    document.getElementById('resIcon').textContent='🖼';
-    document.getElementById('resTitle').textContent='心願圖片準備好了！';
-    document.getElementById('resSub').textContent='下載圖片後，用 LINE 傳「圖片」給對方，對方可以直接看和儲存。';
-    document.getElementById('dlLabel').textContent='⬇ 下載心願圖片（.jpg）';
-    document.getElementById('dlBtn').textContent='⬇ 下載圖片';
-    document.getElementById('dlInfo').textContent='格式：JPG 圖片　LINE 直接傳圖片給對方';
-    document.getElementById('lineType').textContent='選「相片」或「圖片」';
-    document.getElementById('openHint').textContent='直接看到心願卡圖片，可儲存到相簿永久保存';
-  } else if(mode==='audio'){
-    document.getElementById('resIcon').textContent='🎙';
-    document.getElementById('resTitle').textContent='語音心願卡準備好了！';
-    document.getElementById('resSub').textContent='下載音訊檔後，用 LINE 傳「檔案」給對方，對方直接點開播放。';
-    document.getElementById('dlLabel').textContent='⬇ 下載語音檔';
-    document.getElementById('dlBtn').textContent='⬇ 下載語音檔';
-    // detect actual mime
-    var ext = recBlob && recBlob.type.includes('mp4') ? 'm4a' : 'webm';
-    document.getElementById('dlInfo').textContent='格式：音訊檔（.'+ext+'）　LINE 傳「檔案」給對方';
-    document.getElementById('lineType').textContent='選「檔案」';
-    document.getElementById('openHint').textContent='直接點開就能聽到你的聲音';
-  } else {
-    document.getElementById('resIcon').textContent='🎬';
-    document.getElementById('resTitle').textContent='影片心願卡準備好了！';
-    document.getElementById('resSub').textContent='下載影片後，用 LINE 傳「影片」給對方，對方直接點開觀看。';
-    document.getElementById('dlLabel').textContent='⬇ 下載影片';
-    document.getElementById('dlBtn').textContent='⬇ 下載影片';
-    document.getElementById('dlInfo').textContent='格式：影片檔　LINE 傳「影片」給對方';
-    document.getElementById('lineType').textContent='選「影片」';
-    document.getElementById('openHint').textContent='直接點開就能看到你的臉和聽到你的聲音';
-  }
-}
-
-// ── DOWNLOAD ──
-function doDownload(){
-  var toVal=document.getElementById('to').value.trim()||'心願';
-  var fromVal=document.getElementById('from').value.trim()||'送卡人';
-  var msgVal=document.getElementById('msg').value.trim();
-
-  if(mode==='skip'){
-    // generate image via canvas
-    var canvas=document.createElement('canvas');
-    canvas.width=1080;canvas.height=1080;
-    var ctx=canvas.getContext('2d');
-
-    // background gradient
-    var grad=ctx.createLinearGradient(0,0,1080,1080);
-    grad.addColorStop(0,'#fce8ed');
-    grad.addColorStop(0.5,'#f9dce4');
-    grad.addColorStop(1,'#fdf0f3');
-    ctx.fillStyle=grad;ctx.fillRect(0,0,1080,1080);
-
-    // header block
-    var hgrad=ctx.createLinearGradient(0,0,1080,360);
-    hgrad.addColorStop(0,'#a8394f');hgrad.addColorStop(1,'#c8526a');
-    ctx.fillStyle=hgrad;
-    roundRect(ctx,40,40,1000,340,32);ctx.fill();
-
-    // decorative circle
-    ctx.beginPath();ctx.arc(950,80,160,0,Math.PI*2);
-    ctx.fillStyle='rgba(255,255,255,0.07)';ctx.fill();
-
-    // dove emoji area — simple text
-    ctx.font='96px serif';ctx.fillText('🌸',68,170);
-
-    // to name
-    ctx.fillStyle='rgba(255,255,255,0.75)';
-    ctx.font='bold 32px sans-serif';ctx.fillText('💮 心願小卡',68,240);
-    ctx.fillStyle='#ffffff';
-    ctx.font='bold 72px serif';
-    ctx.fillText('親愛的 '+toVal,68,320);
-
-    // from
-    ctx.fillStyle='rgba(255,255,255,0.75)';
-    ctx.font='32px sans-serif';ctx.fillText('來自 '+fromVal+' 的心意',68,370);
-
-    // message box
-    ctx.fillStyle='rgba(253,240,243,0.9)';
-    roundRect(ctx,60,420,960,430,24);ctx.fill();
-    ctx.strokeStyle='#c8526a';ctx.lineWidth=4;
-    ctx.beginPath();ctx.moveTo(60,444);ctx.lineTo(60,830);ctx.stroke();
-
-    ctx.fillStyle='#2d1f28';
-    ctx.font='38px sans-serif';
-    var lines=wrapText(ctx,msgVal,920,38);
-    var ly=490;
-    lines.forEach(function(line){ctx.fillText(line,90,ly);ly+=58;});
-
-    // date + org
-    var now=new Date();
-    var dateStr=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日';
-    ctx.fillStyle='#8a6f78';
-    ctx.font='26px sans-serif';
-    ctx.fillText('🕊 '+dateStr,68,890);
-    ctx.fillText('臺北榮民總醫院蘇澳暨員山分院',68,930);
-    ctx.fillText('善終是每個人的權利',68,965);
-
-    canvas.toBlob(function(blob){
-      var url=URL.createObjectURL(blob);
-      var a=document.createElement('a');
-      a.href=url;a.download='心願小卡_'+toVal+'.jpg';a.click();
-      URL.revokeObjectURL(url);
-      showToast('📥 圖片已下載！請用 LINE 傳圖片給對方');
-    },'image/jpeg',0.92);
-
-  } else {
-    // audio or video blob download
-    if(!recBlob){showToast('找不到錄製檔案，請重新錄製');return;}
-    var isVid=mode==='video';
-    var ext=recBlob.type.includes('mp4')?(isVid?'mp4':'m4a'):(isVid?'webm':'webm');
-    var url=URL.createObjectURL(recBlob);
-    var a=document.createElement('a');
-    a.href=url;
-    a.download='心願小卡_'+toVal+'_'+(isVid?'影片':'語音')+'.'+ext;
-    a.click();
-    URL.revokeObjectURL(url);
-    showToast('📥 已下載！請用 LINE 傳送給對方');
-  }
-}
-
-// canvas helpers
+// ── CANVAS HELPERS ──
 function roundRect(ctx,x,y,w,h,r){
   ctx.beginPath();
-  ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);
-  ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
-  ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);
-  ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();
+  ctx.moveTo(x+r,y); ctx.lineTo(x+w-r,y); ctx.quadraticCurveTo(x+w,y,x+w,y+r);
+  ctx.lineTo(x+w,y+h-r); ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);
+  ctx.lineTo(x+r,y+h); ctx.quadraticCurveTo(x,y+h,x,y+h-r);
+  ctx.lineTo(x,y+r); ctx.quadraticCurveTo(x,y,x+r,y); ctx.closePath();
 }
-function wrapText(ctx,text,maxW,size){
+function wrapTxt(ctx,text,maxW){
   var lines=[],cur='';
   for(var i=0;i<text.length;i++){
     var ch=text[i];
@@ -497,36 +339,211 @@ function wrapText(ctx,text,maxW,size){
     if(ctx.measureText(test).width>maxW&&cur){lines.push(cur);cur=ch;}
     else cur=test;
   }
-  if(cur)lines.push(cur);
+  if(cur) lines.push(cur);
   return lines;
 }
 
+function makeCardCanvas(){
+  var fromVal=document.getElementById('from').value.trim()||'送卡人';
+  var toVal=document.getElementById('to').value.trim()||'親愛的你';
+  var msgVal=document.getElementById('msg').value.trim()||'（未填寫心願）';
+  var now=new Date();
+  var dateStr=now.getFullYear()+'年'+(now.getMonth()+1)+'月'+now.getDate()+'日';
+
+  var canvas=document.createElement('canvas');
+  canvas.width=1080; canvas.height=1350;
+  var ctx=canvas.getContext('2d');
+
+  // background
+  var bg=ctx.createLinearGradient(0,0,1080,1350);
+  bg.addColorStop(0,'#fce8ed'); bg.addColorStop(0.4,'#f9dce4'); bg.addColorStop(1,'#fdf0f3');
+  ctx.fillStyle=bg; ctx.fillRect(0,0,1080,1350);
+
+  // header card
+  var hg=ctx.createLinearGradient(0,60,1080,400);
+  hg.addColorStop(0,'#a8394f'); hg.addColorStop(1,'#c8526a');
+  ctx.fillStyle=hg; roundRect(ctx,40,40,1000,380,32); ctx.fill();
+
+  // decorative circles on header
+  ctx.fillStyle='rgba(255,255,255,0.07)';
+  ctx.beginPath(); ctx.arc(980,100,170,0,Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(100,380,100,0,Math.PI*2); ctx.fill();
+
+  // 💮 tag
+  ctx.fillStyle='rgba(255,255,255,0.65)';
+  ctx.font='500 30px "Noto Sans TC", sans-serif';
+  ctx.fillText('💮 心願小卡',72,110);
+
+  // to name
+  ctx.fillStyle='#ffffff';
+  ctx.font='900 74px "Noto Serif TC", serif';
+  ctx.fillText('親愛的',72,210);
+  ctx.fillText(toVal,72,300);
+
+  // from name
+  ctx.fillStyle='rgba(255,255,255,0.75)';
+  ctx.font='400 34px "Noto Sans TC", sans-serif';
+  ctx.fillText('來自 '+fromVal+' 的心意 🌸',72,372);
+
+  // message area
+  ctx.fillStyle='rgba(255,255,255,0.92)';
+  roundRect(ctx,60,460,960,600,24); ctx.fill();
+  // left accent bar
+  ctx.fillStyle='#c8526a';
+  roundRect(ctx,60,460,8,600,4); ctx.fill();
+
+  // message text
+  ctx.fillStyle='#2d1f28';
+  ctx.font='400 40px "Noto Sans TC", sans-serif';
+  var lines=wrapTxt(ctx,msgVal,860);
+  var ly=530;
+  lines.forEach(function(line){
+    ctx.fillText(line,96,ly); ly+=62;
+  });
+
+  // audio wave decoration (if audio mode)
+  if(mode==='audio'){
+    ctx.fillStyle='rgba(200,82,106,0.12)';
+    roundRect(ctx,60,1090,960,120,16); ctx.fill();
+    ctx.fillStyle='#a8394f';
+    ctx.font='500 28px "Noto Sans TC", sans-serif';
+    ctx.fillText('🎙 附有語音訊息，請搭配語音檔一起收聽',90,1145);
+    // simple waveform decoration
+    var barH=[20,35,50,40,60,30,55,45,25,65,38,52,28,42,58];
+    var bx=90, by=1175;
+    barH.forEach(function(h,i){
+      ctx.fillStyle='rgba(168,57,79,'+(0.3+Math.random()*0.5)+')';
+      ctx.fillRect(bx+i*40,by-h/2,16,h);
+    });
+  }
+
+  // footer
+  ctx.fillStyle='rgba(200,82,106,0.15)';
+  roundRect(ctx,60,1230,960,80,16); ctx.fill();
+  ctx.fillStyle='#8a6f78';
+  ctx.font='400 26px "Noto Sans TC", sans-serif';
+  ctx.fillText('🕊 '+dateStr,90,1272);
+  ctx.fillText('臺北榮民總醫院蘇澳暨員山分院　善終是每個人的權利',90,1302);
+
+  return canvas;
+}
+
+// ── STEP 4 BUILD ──
+function buildStep4(){
+  var toVal=document.getElementById('to').value.trim()||'心願';
+
+  // generate card image
+  var canvas=makeCardCanvas();
+
+  if(mode==='skip'){
+    document.getElementById('resIcon').textContent='🖼';
+    document.getElementById('resTitle').textContent='心願圖片準備好了！';
+    document.getElementById('resSub').textContent='下載圖片後，用 LINE 傳「圖片」給對方，對方直接點開就能看到。';
+
+    document.getElementById('dlSection').style.display='block';
+    document.getElementById('dlTitle').textContent='⬇ 下載心願圖片';
+    document.getElementById('dlButtons').innerHTML='';
+
+    var btn=document.createElement('button');
+    btn.className='btn dl full';
+    btn.textContent='⬇ 下載心願圖片（JPG）';
+    btn.onclick=function(){
+      canvas.toBlob(function(blob){
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a');
+        a.href=url; a.download='心願小卡_'+toVal+'.jpg'; a.click();
+        URL.revokeObjectURL(url);
+        showToast('📥 圖片已下載！');
+      },'image/jpeg',0.92);
+    };
+    document.getElementById('dlButtons').appendChild(btn);
+
+    document.getElementById('howBox').style.display='block';
+    document.getElementById('howTitle').textContent='📱 如何用 LINE 傳送圖片？';
+    document.getElementById('howSteps').innerHTML=
+      sh('下載圖片後，圖片存在手機「相簿」或「檔案 App → 下載項目」')+
+      sh('打開 LINE → 找到對方 → 左下角「＋」→ 選「<strong>相片</strong>」')+
+      sh('選剛才的心願圖片，傳送')+
+      sh('對方點開圖片，直接看到你的心願小卡');
+
+  } else {
+    // audio mode
+    document.getElementById('resIcon').textContent='🎙';
+    document.getElementById('resTitle').textContent='心願小卡準備好了！';
+    document.getElementById('resSub').textContent='下載兩個檔案，一起用 LINE 傳給對方。對方收到後先看圖片，再播語音。';
+
+    document.getElementById('dlSection').style.display='block';
+    document.getElementById('dlTitle').textContent='⬇ 下載這兩個檔案，一起傳給對方';
+    document.getElementById('dlButtons').innerHTML='';
+
+    // card image button
+    var btn1=document.createElement('button');
+    btn1.className='btn dl full';
+    btn1.innerHTML='⬇ ① 下載心願圖片（JPG）';
+    btn1.onclick=function(){
+      canvas.toBlob(function(blob){
+        var url=URL.createObjectURL(blob);
+        var a=document.createElement('a');
+        a.href=url; a.download='心願小卡_'+toVal+'_圖片.jpg'; a.click();
+        URL.revokeObjectURL(url);
+        showToast('📥 圖片已下載！');
+      },'image/jpeg',0.92);
+    };
+
+    // audio button
+    var btn2=document.createElement('button');
+    btn2.className='btn p full';
+    var ext=recBlob&&recBlob.type.includes('mp4')?'m4a':'aac';
+    btn2.innerHTML='⬇ ② 下載語音檔（'+ext+'）';
+    btn2.onclick=function(){
+      if(!recBlob){showToast('找不到語音檔，請重新錄音');return;}
+      var url=URL.createObjectURL(recBlob);
+      var a=document.createElement('a');
+      a.href=url; a.download='心願小卡_'+toVal+'_語音.'+ext; a.click();
+      URL.revokeObjectURL(url);
+      showToast('📥 語音檔已下載！');
+    };
+
+    document.getElementById('dlButtons').appendChild(btn1);
+    document.getElementById('dlButtons').appendChild(btn2);
+
+    document.getElementById('howBox').style.display='block';
+    document.getElementById('howTitle').textContent='📱 如何用 LINE 傳送給對方？';
+    document.getElementById('howSteps').innerHTML=
+      sh('先下載①圖片和②語音檔（共兩個檔案）')+
+      sh('打開 LINE → 找到對方 → 左下角「＋」→ 選「<strong>相片</strong>」→ 傳圖片')+
+      sh('再點「＋」→ 選「<strong>檔案</strong>」→ 找到語音檔 → 傳送')+
+      sh('對方先點<strong>圖片</strong>看心願卡，再點<strong>語音</strong>聽你說話 🌸');
+  }
+}
+
+function sh(txt){
+  var c=sh._c=(sh._c||0)+1;
+  if(c>10) sh._c=0;
+  return '<div class="sh"><div class="sh-num">'+c+'</div><div class="sh-txt">'+txt+'</div></div>';
+}
+
 function again(){
-  recBlob=null;chunks=[];mode=null;secs=0;
+  recBlob=null; chunks=[]; mode=null; secs=0;
+  sh._c=0;
   document.getElementById('from').value='';
   document.getElementById('to').value='';
   document.getElementById('msg').value='';
   document.getElementById('cc').textContent='0';
-  ['mA','mV','mS'].forEach(function(id){document.getElementById(id).classList.remove('picked');});
+  document.getElementById('mA').classList.remove('picked');
+  document.getElementById('mS').classList.remove('picked');
   document.getElementById('mNext').disabled=true;
-  redo();go(1);
-}
-
-function go(n){
-  if(n===2&&!document.getElementById('msg').value.trim()){showToast('💌 請先寫下你的心願');return;}
-  if(n===4) buildStep4();
-  ['p1','p2','p3','p4'].forEach(function(id,i){document.getElementById(id).classList.toggle('on',i+1===n);});
-  for(var i=1;i<=4;i++){
-    var d=document.getElementById('d'+i);
-    d.className='prog-dot'+(i<n?' done':i===n?' on':'');
-    d.textContent=i<n?'✓':String(i);
-  }
-  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('resIcon').textContent='💌';
+  document.getElementById('resTitle').textContent='正在準備你的心願小卡…';
+  document.getElementById('resSub').textContent='請稍候，馬上自動下載';
+  document.getElementById('dlSection').style.display='none';
+  document.getElementById('howBox').style.display='none';
+  redo(); go(1);
 }
 
 function showToast(m){
   var t=document.getElementById('toast');
-  t.textContent=m;t.classList.add('on');
+  t.textContent=m; t.classList.add('on');
   setTimeout(function(){t.classList.remove('on');},3000);
 }
 </script>
