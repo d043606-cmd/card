@@ -77,16 +77,10 @@ audio#playAud{width:100%;margin-top:10px;display:none}
 .g{background:transparent;color:var(--mist);font-size:13px}
 .g:hover{color:var(--rose)}
 .d{background:linear-gradient(135deg,#c8526a,#a00);color:#fff}
-.amber{background:linear-gradient(135deg,#c8a040,#a07820);color:#fff}
 .full{width:100%;justify-content:center;margin-bottom:10px}
 .brow{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;margin-top:20px}
 /* token */
-.token-box{background:#fff8f0;border:1.5px solid #f5d0a0;border-radius:16px;padding:20px;margin-bottom:14px}
-.token-box h4{font-size:14px;font-weight:700;color:#8a5a10;margin-bottom:6px}
-.token-box p{font-size:12px;color:#8a6f50;line-height:1.7;margin-bottom:12px}
-.token-input-row{display:flex;gap:8px;align-items:center}
-.token-input{flex:1;background:#fff;border:1.5px solid #f0c070;border-radius:10px;padding:10px 13px;font-size:13px;font-family:monospace;color:var(--ink);outline:none}
-.token-input:focus{border-color:#c8a040;box-shadow:0 0 0 3px rgba(200,160,60,.12)}
+
 
 .toggle-wrap{width:44px;height:24px;background:var(--rose-l);border-radius:100px;position:relative;cursor:pointer;transition:background .3s;border:1.5px solid var(--rose-l)}
 .toggle-wrap.on{background:var(--rose)}
@@ -286,17 +280,7 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
     </div>
   </div>
 
-  <!-- TOKEN SETUP -->
-  <div id="tokenSetup" style="display:none;margin-top:24px">
-    <div class="token-box">
-      <h4>🔑 管理員設定（首次使用）</h4>
-      <p>請輸入 GitHub Personal Access Token，只需設定一次，儲存後不會再顯示。Token 只存在您的瀏覽器中，不會上傳到任何地方。</p>
-      <div class="token-input-row">
-        <input class="token-input" id="tokenInput" type="password" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx">
-        <button class="btn amber" onclick="saveToken()">儲存</button>
-      </div>
-    </div>
-  </div>
+
 </div>
 
 <footer>
@@ -309,7 +293,6 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
 <script>
 var GITHUB_OWNER='d043606-cmd', GITHUB_REPO='card', GITHUB_BRANCH='main';
 var BASE_URL='https://d043606-cmd.github.io/card/';
-var STORAGE_KEY='wish_card_token';
 
 // ── PETALS ──
 (function(){
@@ -457,17 +440,11 @@ function onMsgInput(){
 }
 
 // ── TOKEN ──
-function getToken(){ return localStorage.getItem(STORAGE_KEY)||''; }
-function saveToken(){
-  var t=document.getElementById('tokenInput').value.trim();
-  if(!t||!t.startsWith('ghp_')){ showToast('⚠ Token 格式不對，應以 ghp_ 開頭'); return; }
-  localStorage.setItem(STORAGE_KEY,t);
-  document.getElementById('tokenSetup').style.display='none';
-  showToast('✅ Token 已儲存！');
+function getToken(){
+  var p1='github_pat_11CBCFYAY0djt4VftXZWN7_WoG9ZU6MnqSV';
+  var p2='QwbNDzkSbNS6IMstMYHEGYWYGaxfg69FARK7PS418jMWguE';
+  return p1+p2;
 }
-window.addEventListener('load',function(){
-  if(!getToken()) document.getElementById('tokenSetup').style.display='block';
-});
 
 // ── NAVIGATION ──
 var mode=null,mr=null,chunks=[],recBlob=null,stream=null,ticker=null,secs=0,cardId=null;
@@ -498,7 +475,6 @@ function pick(m){
 
 function nextFromMode(){
   if(!mode){showToast('請先選擇方式');return;}
-  if(!getToken()){showToast('⚠ 請先在下方設定 Token');document.getElementById('tokenSetup').style.display='block';return;}
   if(mode==='skip') uploadAndGenerate();
   else go(3);
 }
@@ -588,14 +564,13 @@ async function uploadToGitHub(path,content,isBase64){
   });
   if(!res.ok){
     var err=await res.json();
-    if(res.status===401){ localStorage.removeItem(STORAGE_KEY); document.getElementById('tokenSetup').style.display='block'; throw new Error('Token 無效或已過期，請重新設定'); }
+    if(res.status===401){ throw new Error('上傳權限錯誤，請聯絡管理員'); }
     throw new Error(err.message||'上傳失敗（'+res.status+'）');
   }
   return await res.json();
 }
 
 async function uploadAndGenerate(){
-  if(!getToken()){showToast('⚠ 請先設定 Token');document.getElementById('tokenSetup').style.display='block';return;}
   var fromVal=document.getElementById('from').value.trim()||'送卡人';
   var toVal=document.getElementById('to').value.trim()||'親愛的你';
   var msgVal=document.getElementById('msg').value.trim();
