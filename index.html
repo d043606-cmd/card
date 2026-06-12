@@ -602,6 +602,24 @@ async function uploadAndGenerate(){
     var cardHtml=buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme);
     await uploadToGitHub(cardId+'.html',cardHtml,false);
 
+  // ── 同步到 Google Sheets ──
+  try {
+    var sheetsData={
+      hasAudio: mode==='audio',
+      theme: currentThemeKey,
+      msgLen: document.getElementById('msg').value.trim().length,
+      identity: currentThemeKey,
+      note: ''
+    };
+    fetch('https://script.google.com/macros/s/AKfycbxxSXAC34EixsCfNoPE8GqvypqmHsQKIAk8fgjrjOrPMVMVTINsbCLYhyeppK-4HM7f/exec', {
+      method:'POST',
+      mode:'no-cors',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(sheetsData)
+    });
+  } catch(e2){ console.log('sheets sync error:',e2); }
+
+
     setProgress(100,'完成！');
     await new Promise(function(r){setTimeout(r,500);});
 

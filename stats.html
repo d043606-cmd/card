@@ -121,13 +121,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--mist);line-heig
     </a>
   </div>
 
-  <!-- Apps Script 設定（首次使用） -->
-  <div class="setup-box" id="setupBox" style="display:none">
-    <h4>🔧 首次設定：貼入 Apps Script 網址</h4>
-    <p style="font-size:12px;color:var(--mist);margin-bottom:8px">部署 Apps Script 後，把網址貼在下方，儀表板就能讀取 Google Sheets 數據。</p>
-    <input class="setup-input" id="scriptUrlInput" type="text" placeholder="https://script.google.com/macros/s/xxxxx/exec">
-    <button class="btn btn-primary" onclick="saveScriptUrl()" style="margin-top:4px">儲存設定</button>
-  </div>
+
 
   <div id="loadingView" class="loading">
     <div class="spin">✦</div>
@@ -250,7 +244,7 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--mist);line-heig
     <div style="font-size:13px;line-height:1.7">還沒有人製作心願小卡，或 Apps Script 尚未設定。<br>製作第一張心願卡後數據將自動記錄。</div>
     <div style="margin-top:16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
       <a class="btn btn-primary" href="./index.html">🌸 前往製作心願小卡</a>
-      <button class="btn btn-secondary" onclick="document.getElementById('setupBox').style.display='block'">🔧 設定 Apps Script</button>
+
     </div>
   </div>
 </div>
@@ -264,7 +258,6 @@ footer{text-align:center;padding:20px;font-size:11px;color:var(--mist);line-heig
 <script>
 var OWNER='d043606-cmd', REPO='card', BRANCH='main';
 var SHEETS_URL='https://docs.google.com/spreadsheets/d/1LjIo-68qHU9hJvodfxvmfmmWvyKaBIKHnSanQnLktlA/edit';
-var SCRIPT_KEY='wish_script_url';
 
 var THEMES={
   '感恩暖金':{color:'#B8860B'},  '感謝感恩':{color:'#B8860B'},
@@ -282,14 +275,8 @@ var currentStats=null;
 var filterStart='', filterEnd='';
 
 // ── SCRIPT URL ──
-function getScriptUrl(){ return localStorage.getItem(SCRIPT_KEY)||''; }
-function saveScriptUrl(){
-  var url=document.getElementById('scriptUrlInput').value.trim();
-  if(!url.includes('script.google.com')){alert('請貼入正確的 Apps Script 網址');return;}
-  localStorage.setItem(SCRIPT_KEY,url);
-  document.getElementById('setupBox').style.display='none';
-  loadData();
-}
+function getScriptUrl(){ return 'https://script.google.com/macros/s/AKfycbxxSXAC34EixsCfNoPE8GqvypqmHsQKIAk8fgjrjOrPMVMVTINsbCLYhyeppK-4HM7f/exec'; }
+
 
 // ── QUICK FILTER ──
 function quickFilter(type){
@@ -390,7 +377,7 @@ async function loadData(){
   document.getElementById('loadingView').style.display='none';
 
   if(!stats||!stats.total){
-    if(!scriptUrl) document.getElementById('setupBox').style.display='block';
+
     document.getElementById('emptyView').style.display='block';
     return;
   }
