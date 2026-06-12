@@ -1,14 +1,16 @@
 {
-  "total": 1,
+  "total": 2,
   "audio": 0,
-  "textOnly": 1,
+  "textOnly": 2,
   "themes": {
-    "spouse": 1
+    "spouse": 1,
+    "child": 1
   },
   "byDate": {
-    "2026-06-09": 1
+    "2026-06-09": 1,
+    "2026-06-12": 1
   },
   "avgMsgLen": 5,
-  "totalMsgLen": 5,
-  "lastUpdated": "2026-06-09T06:35:57.932Z"
+  "totalMsgLen": 10,
+  "lastUpdated": "2026-06-12T07:51:55.501Z"
 }
