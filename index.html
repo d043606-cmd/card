@@ -261,7 +261,9 @@ footer{text-align:center;margin-top:36px;font-size:11px;color:var(--mist);line-h
         <div class="url-text" id="cardUrl"></div>
         <button class="btn p full" onclick="copyUrl()">複製連結</button>
         <button class="btn s full" onclick="openUrl()">預覽心願卡</button>
+        <button class="btn s full" onclick="saveCardAsImage()">🖼 存成圖片</button>
       </div>
+      <iframe id="cardPreviewFrame" style="display:none;width:480px;height:900px;border:none"></iframe>
       <div class="how-box">
         <h4>📱 如何用 LINE 傳送？</h4>
         <div class="sh"><div class="sh-num">1</div><div class="sh-txt">按上方「<strong>複製連結</strong>」</div></div>
@@ -553,6 +555,17 @@ function blobToBase64(blob){
 }
 function randId(){ return Math.random().toString(36).substr(2,8)+Date.now().toString(36); }
 
+async function waitForDeploy(url,maxTries,intervalMs){
+  for(var i=0;i<maxTries;i++){
+    try{
+      var r=await fetch(url,{method:'GET',cache:'no-store'});
+      if(r.ok) return true;
+    }catch(e){}
+    await new Promise(function(res){setTimeout(res,intervalMs);});
+  }
+  return false;
+}
+
 async function uploadToGitHub(path,content,isBase64){
   var token=getToken();
   var url='https://api.github.com/repos/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/contents/cards/'+path;
@@ -620,10 +633,17 @@ async function uploadAndGenerate(){
   } catch(e2){ console.log('sheets sync error:',e2); }
 
 
-    setProgress(100,'完成！');
-    await new Promise(function(r){setTimeout(r,500);});
-
     var finalUrl=BASE_URL+'cards/'+cardId+'.html';
+
+    // ── 等待 GitHub Pages 部署完成，避免太早分享連結出現404 ──
+    setProgress(85,'⏳ 頁面正在部署上線，請稍候…');
+    var deployed=await waitForDeploy(finalUrl,20,3000); // 最多等約60秒
+    if(deployed){
+      setProgress(100,'完成！頁面已上線 ✅');
+    } else {
+      setProgress(100,'完成！(部署可能還需一點時間，建議稍候1分鐘再分享)');
+    }
+    await new Promise(function(r){setTimeout(r,500);});
 
     // ── 記錄統計數據 ──
     try {
@@ -669,12 +689,16 @@ function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme){
     +'.dtxt{font-size:11px;color:#8a6f78;line-height:1.7}'
     +'.sbtn{display:inline-flex;align-items:center;gap:5px;background:'+theme.bg+';color:#fff;padding:8px 18px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;border:none;font-family:"Noto Sans TC",sans-serif;transition:all .2s}'
     +'.sbtn:hover{transform:translateY(-1px)}'
+    +'.sbtn2{display:inline-flex;align-items:center;gap:5px;background:transparent;color:'+theme.bg+';padding:8px 18px;border-radius:100px;font-size:12px;font-weight:700;cursor:pointer;border:1.5px solid '+theme.bg+';font-family:"Noto Sans TC",sans-serif;transition:all .2s}'
+    +'.sbtn2:hover{transform:translateY(-1px)}'
+    +'.btnrow{display:flex;gap:8px;flex-wrap:wrap}'
     +'.fn{text-align:center;font-size:11px;color:#8a6f78;line-height:1.8;position:relative;z-index:1}';
 
   return '<!DOCTYPE html><html lang="zh-TW"><head><meta charset="UTF-8">'
     +'<meta name="viewport" content="width=device-width,initial-scale=1.0">'
     +'<title>'+theme.deco+' '+esc(fromVal)+' 給 '+esc(toVal)+' 的心願小卡</title>'
     +'<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">'
+    +'<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>'
     +'<style>'+css+'</style></head><body>'
     +'<div class="bg" id="bg"></div>'
     +'<div class="card">'
@@ -689,7 +713,10 @@ function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme){
     +audioSection
     +'<div class="drow">'
     +'<div class="dtxt">🕊 '+esc(dateStr)+'<br>臺北榮民總醫院蘇澳暨員山分院</div>'
+    +'<div class="btnrow">'
     +'<button class="sbtn" onclick="savePage()">📥 下載儲存</button>'
+    +'<button class="sbtn2" onclick="saveAsImage()">🖼 存成圖片</button>'
+    +'</div>'
     +'</div></div></div>'
     +'<div class="fn">善終是每個人的權利　'+theme.deco+'<br>臺北榮民總醫院蘇澳暨員山分院</div>'
     +'<script>(function(){'
@@ -700,6 +727,14 @@ function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme){
     +'function savePage(){var a=document.createElement("a");'
     +'a.href="data:text/html;charset=utf-8,"+encodeURIComponent(document.documentElement.outerHTML);'
     +'a.download="心願小卡_'+esc(toVal)+'.html";a.click();}'
+    +'var hasAudio='+(audioUrl?'true':'false')+';'
+    +'function saveAsImage(){'
+    +'if(hasAudio){ if(!confirm("⚠️ 圖片不會包含語音內容，對方收到圖片將聽不到錄音。\\n是否仍要存成圖片？")) return; }'
+    +'var card=document.querySelector(".card");'
+    +'html2canvas(card,{useCORS:true,backgroundColor:null,scale:2}).then(function(canvas){'
+    +'var a=document.createElement("a");a.download="心願小卡_'+esc(toVal)+'.png";a.href=canvas.toDataURL("image/png");a.click();'
+    +'}).catch(function(){ alert("存成圖片失敗，請改用「下載儲存」"); });'
+    +'}'
     +'<\/script></body></html>';
 }
 
@@ -708,6 +743,24 @@ function copyUrl(){
     .then(function(){ showToast('✅ 連結已複製！貼到 LINE 傳給對方'); });
 }
 function openUrl(){ window.open(document.getElementById('cardUrl').textContent,'_blank'); }
+
+function saveCardAsImage(){
+  var url=document.getElementById('cardUrl').textContent;
+  showToast('⏳ 正在準備圖片…');
+  var frame=document.getElementById('cardPreviewFrame');
+  frame.onload=function(){
+    setTimeout(function(){
+      try{
+        if(frame.contentWindow && typeof frame.contentWindow.saveAsImage==='function'){
+          frame.contentWindow.saveAsImage();
+        } else {
+          showToast('⚠️ 圖片準備失敗，請改用連結分享');
+        }
+      }catch(e){ showToast('⚠️ 圖片準備失敗，請改用連結分享'); }
+    },500);
+  };
+  frame.src=url;
+}
 
 function again(){
   recBlob=null; chunks=[]; mode=null; secs=0; cardId=null;
