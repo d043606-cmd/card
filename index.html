@@ -416,6 +416,7 @@ function analyzeTheme(from, msg){
 }
 
 var currentThemeKey='default';
+var _cardSnapshot=null; // 存放最新卡片資料，供存成圖片使用
 
 function previewTheme(){
   var from=document.getElementById('from').value;
@@ -613,6 +614,7 @@ async function uploadAndGenerate(){
       ?'https://raw.githubusercontent.com/'+GITHUB_OWNER+'/'+GITHUB_REPO+'/'+GITHUB_BRANCH+'/cards/'+audioFilename
       :'';
     var cardHtml=buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme);
+    _cardSnapshot={fromVal:fromVal,toVal:toVal,msgVal:msgVal,dateStr:dateStr,audioUrl:audioUrl,theme:theme};
     await uploadToGitHub(cardId+'.html',cardHtml,false);
 
   // ── 同步到 Google Sheets ──
@@ -732,7 +734,7 @@ function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme){
     +'if(hasAudio){ if(!confirm("⚠️ 圖片不會包含語音內容，對方收到圖片將聽不到錄音。\\n是否仍要存成圖片？")) return; }'
     +'var card=document.querySelector(".card");'
     +'html2canvas(card,{useCORS:true,backgroundColor:null,scale:2}).then(function(canvas){'
-    +'canvas.toBlob(function(blob){var a=document.createElement("a");a.download="心願小卡_'+esc(toVal)+'.png";a.href=URL.createObjectURL(blob);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);},"image/png");'
+    +'var a=document.createElement("a");a.download="心願小卡_'+esc(toVal)+'.png";a.href=canvas.toDataURL("image/png");a.click();'
     +'}).catch(function(){ alert("存成圖片失敗，請改用「下載儲存」"); });'
     +'}'
     +'<\/script></body></html>';
@@ -745,21 +747,64 @@ function copyUrl(){
 function openUrl(){ window.open(document.getElementById('cardUrl').textContent,'_blank'); }
 
 function saveCardAsImage(){
-  var url=document.getElementById('cardUrl').textContent;
+  if(!_cardSnapshot){ showToast('⚠️ 請先完成心願卡再存圖片'); return; }
+  var s=_cardSnapshot;
+  if(s.audioUrl){ if(!confirm('⚠️ 圖片不會包含語音內容，對方收到圖片將聽不到錄音。\n是否仍要存成圖片？')) return; }
   showToast('⏳ 正在準備圖片…');
-  var frame=document.getElementById('cardPreviewFrame');
-  frame.onload=function(){
-    setTimeout(function(){
-      try{
-        if(frame.contentWindow && typeof frame.contentWindow.saveAsImage==='function'){
-          frame.contentWindow.saveAsImage();
-        } else {
-          showToast('⚠️ 圖片準備失敗，請改用連結分享');
-        }
-      }catch(e){ showToast('⚠️ 圖片準備失敗，請改用連結分享'); }
-    },500);
-  };
-  frame.src=url;
+
+  // 載入 html2canvas（如未載入）
+  function doCapture(){
+    var t=s.theme;
+    // 建立隱藏卡片 div
+    var wrap=document.createElement('div');
+    wrap.style.cssText='position:fixed;left:-9999px;top:0;width:480px;z-index:-1;font-family:"Noto Sans TC",sans-serif;';
+
+    var esc=function(str){return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');};
+    var audioHtml=s.audioUrl
+      ?'<div style="background:'+t.audioBg+';border-radius:14px;padding:16px 18px;margin-bottom:16px"><div style="font-size:12px;color:'+t.audioLabel+';font-weight:700;letter-spacing:1px;margin-bottom:6px">'+t.deco+' 聆聽心願語音</div><audio controls style="width:100%;margin-top:8px" src="'+s.audioUrl+'"></audio></div>'
+      :'';
+
+    wrap.innerHTML='<div style="background:#fff;border-radius:24px;max-width:480px;width:100%;box-shadow:0 16px 56px rgba(0,0,0,.15);overflow:hidden">'+
+      '<div style="background:'+t.bg+';padding:32px 28px 24px;position:relative;overflow:hidden">'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.5);letter-spacing:1px;margin-bottom:4px">✦ '+t.name+'　智慧專屬設計</div>'+
+      '<div style="font-size:11px;color:rgba(255,255,255,.7);letter-spacing:2px;margin-bottom:8px">💮 心願小卡</div>'+
+      '<div style="font-family:'Noto Serif TC',serif;font-size:28px;font-weight:900;color:#fff;line-height:1.2;margin-bottom:4px">親愛的<br>'+esc(s.toVal)+'</div>'+
+      '<div style="font-size:13px;color:rgba(255,255,255,.75)">來自 '+esc(s.fromVal)+' 的心意 '+t.deco+'</div>'+
+      '</div>'+
+      '<div style="padding:24px 28px 28px;background:'+t.bodyBg+'">'+
+      '<div style="background:'+t.msgBg+';border-radius:14px;padding:18px 20px;margin-bottom:20px;border-left:3px solid '+t.msgBorder+'">'+
+      '<div style="font-size:16px;color:#2d1f28;line-height:1.95;white-space:pre-wrap;font-family:'Noto Serif TC',serif">'+esc(s.msgVal)+'</div></div>'+
+      audioHtml+
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid '+t.footerBorder+';flex-wrap:wrap;gap:8px">'+
+      '<div style="font-size:11px;color:#8a6f78;line-height:1.7">🕊 '+esc(s.dateStr)+'<br>臺北榮民總醫院蘇澳暨員山分院</div>'+
+      '</div></div></div>';
+
+    document.body.appendChild(wrap);
+
+    html2canvas(wrap.firstChild,{useCORS:true,backgroundColor:'#fff',scale:2,logging:false}).then(function(canvas){
+      document.body.removeChild(wrap);
+      canvas.toBlob(function(blob){
+        var a=document.createElement('a');
+        a.download='心願小卡_'+s.toVal+'.png';
+        a.href=URL.createObjectURL(blob);
+        a.click();
+        setTimeout(function(){URL.revokeObjectURL(a.href);},1000);
+      },'image/png');
+    }).catch(function(err){
+      document.body.removeChild(wrap);
+      console.error(err);
+      showToast('⚠️ 圖片產生失敗，請改用「下載儲存」');
+    });
+  }
+
+  if(typeof html2canvas==='function'){
+    doCapture();
+  } else {
+    var sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+    sc.onload=doCapture;
+    document.head.appendChild(sc);
+  }
 }
 
 function again(){
