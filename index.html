@@ -732,7 +732,7 @@ function buildCardPage(fromVal,toVal,msgVal,dateStr,audioUrl,theme){
     +'if(hasAudio){ if(!confirm("⚠️ 圖片不會包含語音內容，對方收到圖片將聽不到錄音。\\n是否仍要存成圖片？")) return; }'
     +'var card=document.querySelector(".card");'
     +'html2canvas(card,{useCORS:true,backgroundColor:null,scale:2}).then(function(canvas){'
-    +'var a=document.createElement("a");a.download="心願小卡_'+esc(toVal)+'.png";a.href=canvas.toDataURL("image/png");a.click();'
+    +'canvas.toBlob(function(blob){var a=document.createElement("a");a.download="心願小卡_'+esc(toVal)+'.png";a.href=URL.createObjectURL(blob);a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},1000);},"image/png");'
     +'}).catch(function(){ alert("存成圖片失敗，請改用「下載儲存」"); });'
     +'}'
     +'<\/script></body></html>';
